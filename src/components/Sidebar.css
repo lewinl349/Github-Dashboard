@@ -1,0 +1,48 @@
+#sidebar {
+    margin-right: 5%;
+    background-color: black;
+    border-radius: 15px;
+    width: 10%
+}
+
+#sidebar .logo {
+    width: 48px;
+    height: 48px;
+}
+
+#sidebar .menu {
+    display: grid;
+}
+
+/* =========================================== */
+
+#sidebar .menu ul {
+    list-style: none;
+    padding-left: 0;
+    grid-template-rows: repeat(10, 1fr);
+}
+
+#sidebar .menu li, a {
+    display: flex; /* Center items in a grid */
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    color: white;
+    transition-duration: 0.6s;
+}
+
+#sidebar .menu li:hover {
+    background-color: grey;
+}
+
+#sidebar .menu .githubLogo {
+    width: 32px;
+    height: 32px;
+    transition-duration: 0.6s;
+}
+
+#sidebar .menu .githubLogo:hover {
+    filter: invert(47%) sepia(0%) saturate(2352%) hue-rotate(341deg) brightness(107%) contrast(90%);
+}
