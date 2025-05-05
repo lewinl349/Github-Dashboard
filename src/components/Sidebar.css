@@ -1,10 +1,3 @@
-#sidebar {
-    margin-right: 5%;
-    background-color: black;
-    border-radius: 15px;
-    width: 10%
-}
-
 #sidebar .logo {
     width: 48px;
     height: 48px;
@@ -34,7 +27,7 @@
 }
 
 #sidebar .menu li:hover {
-    background-color: grey;
+    background-color: #5a108f;
 }
 
 #sidebar .menu .githubLogo {
