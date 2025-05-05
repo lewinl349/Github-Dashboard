@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="src/main.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="dashboard.css">
     <title>Github Companion Dashboard</title>
   </head>
   <body>
@@ -12,11 +13,14 @@
       <div id="sidebar"></div>
       <div id="content">
         <div><h1>Github Companion Dashboard</h1></div>
-        <div class="graphs"></div>
+        <div class="graphs">
+          <h2 style="margin-top: 0;">Most Used Languages</h2>
+          <div id="language-graph"></div>
+        </div>
         <div>3</div>
       </div>
     </div>
     
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="dashboard.jsx"></script>
   </body>
 </html>

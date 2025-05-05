@@ -1,0 +1,12 @@
+.graphs {
+    background-color: #0e0029;
+    border-radius: 15px;
+    padding: 4%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+#language-graph {
+    width: 30vh;
+    height: 30vh;
+}
