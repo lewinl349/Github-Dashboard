@@ -19,17 +19,22 @@ sidebar.render(
 // Languages chart
 const data = {
   labels: [
-    'Red',
-    'Blue',
-    'Yellow'
+    'Ruby',
+    'Python',
+    'Java'
   ],
   datasets: [{
-    label: 'My First Dataset',
-    data: [300, 50, 100],
+    label: 'Usage',
+    data: [0.4, 0.5, 0.1],
     backgroundColor: [
       'rgb(255, 99, 132)',
       'rgb(54, 162, 235)',
       'rgb(255, 205, 86)'
+    ],
+    borderColor: [
+      'rgb(123, 49, 65)',
+      'rgb(27, 85, 123)',
+      'rgb(131, 104, 42)'
     ],
     hoverOffset: 4
   }]
