@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "main": "src/main.js",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,14 +13,19 @@
     "start": "concurrently \"npm run dev\" \"npm run runelec\""
   },
   "dependencies": {
+    "@types/express": "^5.0.1",
     "chart.js": "^4.4.9",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
     "octokit": "^4.1.3",
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tsx": "^4.19.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@types/node": "^22.15.14",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
@@ -29,6 +35,8 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
     "vite": "^6.3.1"
   }
 }

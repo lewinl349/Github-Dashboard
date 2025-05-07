@@ -3,13 +3,13 @@
 ## Description
 
 (Currently WIP)
-A desktop companion app for Github that displays profile summaries (contributions, commits, etc...) and allow users to add localized notes for each respository.
+A companion webapp for Github that displays profile summaries (contributions, commits, etc...) and allow users to add localized notes for each respository.
 
 ## Technologies
 - ElectronJS
 - React + Vite
-- Github API
-- NodeJS (Packages: ChartJS)
+- Express
+- NodeJS (Packages: ChartJS, Octokit, Dotenv)
 
 ## Features 
 - Visualizations of contributions per days, languages used, etc...

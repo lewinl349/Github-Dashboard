@@ -1,19 +1,19 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './main.css'
-import Sidebar from './components/Sidebar.jsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './main.css';
+import Sidebar from './components/Sidebar.jsx';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 // Render sidebar component
-const sidebar = createRoot(document.getElementById('sidebar'))
+const sidebar = createRoot(document.getElementById('sidebar'));
 sidebar.render(
   <StrictMode>
     <Sidebar/>
   </StrictMode>,
-)
+);
 
 // ================= Graphs =================
 // Languages chart
@@ -42,6 +42,10 @@ const data = {
 const languageGraph = createRoot(document.getElementById('language-graph'));
 languageGraph.render(
   <Pie data={data} />
+);
+
+const repoStats = createRoot(document.getElementById('repo-stats'));
+repoStats.render(
+  <></>
+  // <Bar data={data} />
 )
-
-

@@ -1,26 +1,26 @@
-const { app, BrowserWindow } = require('electron/main')
+import { app, BrowserWindow } from 'electron/main';
 
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 1600,
     height: 900
-  })
+  });
 
-  win.loadURL('http://localhost:5173/')
+  win.loadURL('http://localhost:5173/');
 }
 
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+      createWindow();
     }
   })
-})
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
-})
+});

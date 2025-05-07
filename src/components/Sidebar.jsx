@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import logo from '../assets/logo.svg'
-import githubLogo from '../assets/github-mark-white.svg'
-import './Sidebar.css'
+import { useState } from 'react';
+import logo from '../assets/logo.svg';
+import githubLogo from '../assets/github-mark-white.svg';
+import './Sidebar.css';
 
 export default function Sidebar() {
   return (
@@ -20,5 +20,5 @@ export default function Sidebar() {
         </ul>      
       </aside>   
     </>
-  )
+  );
 }
