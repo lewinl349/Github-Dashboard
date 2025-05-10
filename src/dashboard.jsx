@@ -1,22 +1,13 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import './main.css';
+import './app.css';
+import './dashboard.css';
 import Sidebar from './components/Sidebar.jsx';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
-
-// Render sidebar component
-const sidebar = createRoot(document.getElementById('sidebar'));
-sidebar.render(
-  <StrictMode>
-    <Sidebar/>
-  </StrictMode>,
-);
-
 // ================= Graphs =================
 // Languages chart
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 const data = {
   labels: [
     'Ruby',
@@ -39,13 +30,25 @@ const data = {
     hoverOffset: 4
   }]
 };
-const languageGraph = createRoot(document.getElementById('language-graph'));
-languageGraph.render(
-  <Pie data={data} />
-);
 
-const repoStats = createRoot(document.getElementById('repo-stats'));
-repoStats.render(
-  <></>
-  // <Bar data={data} />
-)
+// ================= Layout =================
+
+export default function Dashboard() {
+  return (
+    <div class="main">
+      <Sidebar />
+      <div id="content">
+        <div><h1>Github Companion Dashboard</h1></div>
+        <div class="graphs">
+          <div class="box">
+            <h2>Most Used Languages</h2>
+            <Pie data={data} />
+          </div>
+          <div class="box">
+            <h2>Most Used Languages</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

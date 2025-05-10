@@ -25,10 +25,3 @@ html, body {
 .content {
   display: flex;
 }
-
-#sidebar {
-  margin-right: 5%;
-  background-color: #0e0029;
-  width: 10%;
-  height: 100vh;
-}
