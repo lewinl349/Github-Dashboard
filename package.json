@@ -10,11 +10,12 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "runelec": "electron .",
-    "start": "concurrently \"npm run dev\" \"npm run runelec\""
+    "start": "concurrently \"npm run dev\" \"npm run runelec\" \"npx tsx server/index.ts\""
   },
   "dependencies": {
     "@types/express": "^5.0.1",
     "chart.js": "^4.4.9",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "octokit": "^4.1.3",

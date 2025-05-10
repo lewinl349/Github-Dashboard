@@ -6,10 +6,10 @@
 A companion webapp for Github that displays profile summaries (contributions, commits, etc...) and allow users to add localized notes for each respository.
 
 ## Technologies
-- ElectronJS
+- Electron JS
 - React + Vite
 - Express
-- NodeJS (Packages: ChartJS, Octokit, Dotenv)
+- (Packages: ChartJS, Octokit, Dotenv, React Router)
 
 ## Features 
 - Visualizations of contributions per days, languages used, etc...

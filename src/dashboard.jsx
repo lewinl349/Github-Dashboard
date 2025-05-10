@@ -3,10 +3,16 @@ import './dashboard.css';
 import Sidebar from './components/Sidebar.jsx';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import { useEffect, useState } from 'react';
 
 // ================= Graphs =================
 // Languages chart
 ChartJS.register(ArcElement, Tooltip, Legend);
+
+const options = {
+  responsive: true,
+  maintainAspectRatio: false
+}
 
 const data = {
   labels: [
@@ -35,16 +41,16 @@ const data = {
 
 export default function Dashboard() {
   return (
-    <div class="main">
+    <div className="main">
       <Sidebar />
       <div id="content">
         <div><h1>Github Companion Dashboard</h1></div>
-        <div class="graphs">
-          <div class="box">
+        <div className="graphs">
+          <div className="box">
             <h2>Most Used Languages</h2>
-            <Pie data={data} />
+            <Pie data={data} options={options}/>
           </div>
-          <div class="box">
+          <div className="box">
             <h2>Most Used Languages</h2>
           </div>
         </div>

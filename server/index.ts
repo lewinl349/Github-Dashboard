@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from 'cors';
 import { parseAllRepos } from './jsonhelper.js';
 import { getRawAllRepos } from './githubhelper.js';
 
@@ -9,6 +10,9 @@ const app = express();
 const port: number = parseInt(process.env.PORT) || 3000;
 const user: string = "lewinl349"; // Temporary hardcode
 
+// Allow react to get access to the port
+app.use(cors());
+
 async function GenerateReposList() {
     const response = await getRawAllRepos(); 
     const data = JSON.stringify(response);
@@ -16,10 +20,10 @@ async function GenerateReposList() {
 }
 
 // Get list of repositories
-app.get('/', async (req, res) => {
+app.get('/getRepos', async (req, res) => {
   try {
     var repos = await GenerateReposList();
-    res.send(repos);
+    res.json(repos);
 
   } catch (error) {
     console.error(error);

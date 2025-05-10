@@ -7,11 +7,11 @@ import { Outlet, Link } from "react-router-dom";
 export default function Sidebar() {
   return (
     <div id="sidebar">
-      <aside class="menu">
+      <aside className="menu">
         <ul>
-          <a href="#dashboard">
+          <Link to="/">
             <img src={logo} className="logo" alt="logo" />
-          </a>
+          </Link>
           <li><Link to="/">&#128200; Dashboard</Link></li>	
           <li><Link to="/repos">&#128211; Repositories</Link></li>
           <li><a href="#dashboard">&#128270; Assistant</a></li>

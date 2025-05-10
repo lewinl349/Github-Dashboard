@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client';
 import Dashboard from './dashboard';
 import Repos from './repos';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import { fetchListOfRepos } from "./hooks/fetch_github";
 
 const main = createRoot(document.getElementById('page'));
 main.render(

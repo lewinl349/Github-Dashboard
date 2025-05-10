@@ -1,0 +1,17 @@
+.repos {
+    display: grid;
+}
+
+.repos ul {
+    list-style: none;
+    padding-left: 0;
+    grid-template-rows: repeat(10, 1fr);
+}
+
+.repos li {
+    background-color: #0e0029;
+    padding: 2vh;
+    margin: 2vh;
+    border-radius: 5%;
+    width: 40vh
+}
