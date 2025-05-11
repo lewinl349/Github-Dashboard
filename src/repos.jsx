@@ -9,7 +9,7 @@ export default function Repos() {
   const [repos, setRepos] = useState([]);
   
     useEffect(() => {
-      fetch('http://localhost:3000/getRepos')
+      fetch('http://localhost:3000/repos/all')
         .then((res) => res.json())
         .then((data) => setRepos(data))
         .catch((err) => console.error('Failed to fetch repos:', err));
