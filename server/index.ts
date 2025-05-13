@@ -45,6 +45,19 @@ async function findCommonLanguages() {
   return await calculateAvgLang(repos);
 }
 
+app.get('/repos/langs', async (req, res) => {
+  try {
+    var langs = await findCommonLanguages();
+    const obj = Object.fromEntries(langs);
+    res.json(obj);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500)
+    res.send('Internal Server Error');
+  }
+});
+
 app.listen(port, () => {
   console.log(`Sucessfully listening on port ${port}. Open http://localhost:3000/`);
 })
