@@ -13,6 +13,7 @@
     "start": "concurrently \"npm run dev\" \"npm run runelec\" \"npx tsx server/index.ts\""
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.7",
     "@types/express": "^5.0.1",
     "chart.js": "^4.4.9",
     "cors": "^2.8.5",
@@ -24,6 +25,7 @@
     "react-dom": "^19.0.0",
     "react-router": "^7.6.0",
     "react-router-dom": "^7.6.0",
+    "tailwindcss": "^4.1.7",
     "tsx": "^4.19.4"
   },
   "devDependencies": {
@@ -33,6 +35,7 @@
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.2",
+    "daisyui": "^5.0.35",
     "electron": "^36.1.0",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",

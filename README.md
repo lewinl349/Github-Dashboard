@@ -9,7 +9,7 @@ A companion webapp for Github that displays profile summaries (contributions, co
 - Electron JS
 - React + Vite
 - Express
-- (Packages: ChartJS, Octokit, Dotenv, React Router)
+- (Packages: ChartJS, Octokit, Dotenv, React Router, DaisyUI)
 
 ## Features 
 - Visualizations of contributions per days, languages used, etc...

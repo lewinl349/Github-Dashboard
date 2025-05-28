@@ -1,3 +1,8 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+    themes: night;
+}
+
 .graphs {
     display: flex;
 }
