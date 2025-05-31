@@ -61,8 +61,8 @@ export default function Dashboard() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-col p-5">
-        <div>Github Companion Dashboard</div>
+      <div className="flex flex-col items-center p-5">
+        <p className="text-2xl font-bold text-center my-5">Github Stats</p>
         <div className="carousel w-100 rounded-box">
           <div id="item1" className="carousel-item">
             <div className="card bg-base-100 w-96 shadow-sm">
@@ -71,7 +71,7 @@ export default function Dashboard() {
               </figure>
               <div className="card-body">
                 <h2 className="card-title">Most Used Languages</h2>
-                <p></p>
+                <p>Pie Chart</p>
               </div>
             </div>
           </div>
@@ -82,7 +82,7 @@ export default function Dashboard() {
               </figure>
               <div className="card-body">
                 <h2 className="card-title">Most Used Languages</h2>
-                <p></p>
+                <p>Bar Graph</p>
               </div>
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function Dashboard() {
                 <Pie data={generateLangData(langs)} options={options} />
               </figure>
               <div className="card-body">
-                <h2 className="card-title">Most Used Languages</h2>
+                <h2 className="card-title text-center">Most Used Languages</h2>
                 <p></p>
               </div>
             </div>
@@ -115,7 +115,9 @@ export default function Dashboard() {
           <a href="#item3" className="btn btn-circle">3</a>
           <a href="#item4" className="btn btn-circle">4</a>
         </div>
+        <div className="btn rounded-box">Customize</div>
       </div>
+
     </div>
   );
 }

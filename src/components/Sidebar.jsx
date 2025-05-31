@@ -6,7 +6,7 @@ import { Outlet, Link } from "react-router-dom";
 
 export default function Sidebar() {
   return (
-    <div className="flex-col justify-between h-screen bg-base-100 w-45 ">
+    <div className="flex flex-col h-screen bg-base-100 w-45 ">
       <ul className="menu">
         <li><Link to="/">
           &#128200; Dashboard

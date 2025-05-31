@@ -11,13 +11,13 @@ export default function Repos() {
     fetch('http://localhost:3000/repos/all')
       .then((res) => res.json())
       .then((data) => setRepos(data))
-      .catch((err) => console.error('Failed to fetch repos:', err));
+      .catch((err) => console.error('Failed to fetch reps:', err));
   }, []);
 
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-col">
+      <div className="flex flex-col">
         <div><h1>Your Repositories</h1></div>
         <div className="list-row">
           <ul>
