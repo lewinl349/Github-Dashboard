@@ -48,16 +48,7 @@ function generateLangData(map) {
 
 // ================= Layout =================
 
-export default function Dashboard() {
-  const [langs, setLangs] = useState(new Map());
-
-  useEffect(() => {
-    fetch('http://localhost:3000/repos/langs')
-      .then((res) => res.json())
-      .then((data) => setLangs(data))
-      .catch((err) => console.error('Failed to fetch repos:', err));
-  }, []);
-
+export default function Dashboard({langs}) {
   return (
     <div className="flex">
       <Sidebar />
