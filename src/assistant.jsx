@@ -1,5 +1,4 @@
 import './app.css'
-import './assistant.css';
 import Sidebar from './components/Sidebar.jsx';
 import { useEffect, useState } from 'react';
 
@@ -9,6 +8,7 @@ export default function Assistant() {
   return (
     <div className="main">
       <Sidebar />
+      <button className="btn btn-active btn-primary">Primary</button>
     </div>
   );
 }

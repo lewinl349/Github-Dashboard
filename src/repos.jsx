@@ -1,4 +1,3 @@
-import './repos.css'
 import './app.css';
 import Sidebar from './components/Sidebar.jsx';
 import { useEffect, useState } from 'react';
@@ -16,14 +15,14 @@ export default function Repos() {
   }, []);
 
   return (
-    <div className="main">
+    <div className="flex">
       <Sidebar />
-      <div id="content">
+      <div className="flex-col">
         <div><h1>Your Repositories</h1></div>
-        <div className="repos">
+        <div className="list-row">
           <ul>
             {repos.map((repo) => (
-              <li key={repo}>{repo}</li>
+              <li className="bg-base-100 rounded-box w-[50vw] h-[10vh] m-5 p-5" key={repo}>{repo}</li>
             ))}
           </ul>
         </div>

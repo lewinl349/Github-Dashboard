@@ -1,5 +1,4 @@
 import './app.css';
-import './dashboard.css';
 import Sidebar from './components/Sidebar.jsx';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
@@ -51,7 +50,7 @@ function generateLangData(map) {
 
 export default function Dashboard() {
   const [langs, setLangs] = useState(new Map());
-  
+
   useEffect(() => {
     fetch('http://localhost:3000/repos/langs')
       .then((res) => res.json())
@@ -60,18 +59,61 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="main">
+    <div className="flex">
       <Sidebar />
-      <div id="content">
-        <div><h1>Github Companion Dashboard</h1></div>
-        <div className="graphs">
-          <div className="box">
-            <h2>Most Used Languages</h2>
-            <Pie data={generateLangData(langs)} options={options}/>
+      <div className="flex-col p-5">
+        <div>Github Companion Dashboard</div>
+        <div className="carousel w-100 rounded-box">
+          <div id="item1" className="carousel-item">
+            <div className="card bg-base-100 w-96 shadow-sm">
+              <figure>
+                <Pie data={generateLangData(langs)} options={options} />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title">Most Used Languages</h2>
+                <p></p>
+              </div>
+            </div>
           </div>
-          <div className="box">
-            <h2>Most Used Languages</h2>
+          <div id="item2" className="carousel-item">
+            <div className="card bg-base-100 w-96 shadow-sm">
+              <figure>
+                <Pie data={generateLangData(langs)} options={options} />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title">Most Used Languages</h2>
+                <p></p>
+              </div>
+            </div>
           </div>
+          <div id="item3" className="carousel-item">
+            <div className="card bg-base-100 w-96 shadow-sm">
+              <figure>
+                <Pie data={generateLangData(langs)} options={options} />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title">Most Used Languages</h2>
+                <p></p>
+              </div>
+            </div>
+          </div>
+          <div id="item4" className="carousel-item">
+            <div className="card bg-base-100 w-96 shadow-sm">
+              <figure>
+                <Pie data={generateLangData(langs)} options={options} />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title">Most Used Languages</h2>
+                <p></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex w-full justify-center gap-2 py-2">
+          <a href="#item1" className="btn btn-circle">1</a>
+          <a href="#item2" className="btn btn-circle">2</a>
+          <a href="#item3" className="btn btn-circle">3</a>
+          <a href="#item4" className="btn btn-circle">4</a>
         </div>
       </div>
     </div>

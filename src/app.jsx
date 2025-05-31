@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const main = createRoot(document.getElementById('page'));
 main.render(
+  <div>
     <BrowserRouter>
       <Routes>
         <Route index element={<Dashboard />} />
@@ -15,4 +16,5 @@ main.render(
         {/* <Route path="*" element={<NoPage />} /> */}
       </Routes>
     </BrowserRouter>
+  </div>
 );

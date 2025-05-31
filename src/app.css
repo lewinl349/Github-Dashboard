@@ -18,10 +18,7 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.main {
-  display: flex;
-}
-
-.content {
-  display: flex;
+@import "tailwindcss";
+@plugin "daisyui" {
+    themes: all;
 }
