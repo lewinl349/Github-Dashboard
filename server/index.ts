@@ -13,7 +13,7 @@ const user: string = process.env.USER;
 // Allow react to get access to the port
 app.use(cors());
 
-// Get list of repositories
+// Return a list of repositories
 async function generateReposList() {
     const response = await getRawAllRepos(); 
     const data = JSON.stringify(response);

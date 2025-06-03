@@ -1,4 +1,3 @@
-// http://localhost:3000/repos/all
 import Dashboard from './dashboard';
 import Repos from './repos';
 import Assistant from './assistant';
@@ -42,4 +41,14 @@ export function DashboardPage() {
     return (
         <Dashboard langs={data}/>
     )
+}
+
+export function AssistantPage() {
+    return (
+        <Assistant />
+    )
+}
+
+export function NoPage() {
+    return 'No page found at this link...';
 }

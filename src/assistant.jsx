@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 
 export default function Assistant() {
   return (
-    <div className="main">
+    <div className="flex">
       <Sidebar />
       <button className="btn btn-active btn-primary">Primary</button>
     </div>

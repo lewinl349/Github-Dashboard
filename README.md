@@ -1,4 +1,4 @@
-# Github Companion Dashboard
+# Companion Dashboard for Github
 
 ## Description
 
@@ -12,7 +12,8 @@ A companion webapp for Github that displays profile summaries (contributions, co
 - (Packages: ChartJS, Octokit, Dotenv, React Router, React Query, DaisyUI)
 
 ## Features 
-- Visualizations of contributions per days, languages used, etc...
-- TODO lists for each repo
-- Custom notes for each repo, folders, etc...
+- Visualizations of languages used and other profile stats
+- Summary of upcoming tasks
+- For each repo: TODO list, notes, custom icon, pins 
+- Repo folders
 - Different themes

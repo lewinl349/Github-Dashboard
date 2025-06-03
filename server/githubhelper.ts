@@ -19,7 +19,7 @@ export async function getRawAllRepos() {
   return response.data;
 }
 
-// Request to get alld ata from a repo
+// Request to get all data from a repo
 export async function getRawRepoData(repo: string) {
   const response = await octokit.request('GET /repos/{owner}/{repo}', {
     owner: user,

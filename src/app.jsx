@@ -1,6 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { ReposPage, DashboardPage } from './query';
-import Assistant from './assistant';
+import { ReposPage, DashboardPage, AssistantPage, NoPage } from './query';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
   QueryClient,
@@ -17,8 +16,8 @@ main.render(
         <Routes>
           <Route index element={<DashboardPage />} />
           <Route path="/repos" element={<ReposPage />} />
-          <Route path="/assistant" element={<Assistant />} />
-          {/* <Route path="*" element={<NoPage />} /> */}
+          <Route path="/assistant" element={<AssistantPage />} />
+          <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
