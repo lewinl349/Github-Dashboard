@@ -1,6 +1,6 @@
-import Dashboard from './dashboard';
-import Repos from './repos';
-import Assistant from './assistant';
+import Dashboard from './pages/dashboard';
+import Repos from './pages/repos';
+import Assistant from './pages/assistant';
 import { useQuery } from '@tanstack/react-query';
 
 export function ReposPage() {

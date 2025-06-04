@@ -1,6 +1,6 @@
-import './app.css';
-import Sidebar from './components/Sidebar.jsx';
-import githubLogo from './assets/github-mark-white.svg';
+import '../app.css';
+import Sidebar from '../components/Sidebar.jsx';
+import githubLogo from '../assets/github-mark-white.svg';
 
 // ================= Layout =================
 
@@ -40,7 +40,7 @@ export default function Repos({ repos }) {
                         <div className="mask mask-squircle h-12 w-12">
                           <img
                             src={githubLogo}
-                            alt="Picture failed to load" />
+                            alt="Custom repo icon" />
                         </div>
                       </div>
                       <div>
