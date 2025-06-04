@@ -4,6 +4,8 @@ import cors from 'cors';
 import { parseAllRepos, parseRepoInfo, calculateAvgLang } from './jsonhelper';
 import { getRawAllRepos, getRawRepoData, getRawRepoLangs } from './githubhelper';
 
+// =================================
+// Setup
 dotenv.config({ path: 'server/secrets/keys.env' });
 
 const app = express();
@@ -13,6 +15,7 @@ const user: string = process.env.USER;
 // Allow react to get access to the port
 app.use(cors());
 
+// =================================
 // Return a list of repositories
 async function generateReposList() {
     const response = await getRawAllRepos(); 
@@ -32,6 +35,7 @@ app.get('/repos/all', async (req, res) => {
   }
 });
 
+// =================================
 // Return certain stats from a repository
 async function generateRepoinfo(repo: string) {
   const response = await getRawRepoData(repo);
@@ -58,6 +62,15 @@ app.get('/repos/langs', async (req, res) => {
   }
 });
 
+// =================================
+// Github User Information
+
+// Temp
+app.get('/user/name', async (req, res) => {
+  res.send(user);
+})
+
+// =================================
 app.listen(port, () => {
   console.log(`Sucessfully listening on port ${port}. Open http://localhost:3000/`);
 })

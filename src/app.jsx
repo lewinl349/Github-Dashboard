@@ -12,14 +12,14 @@ const main = createRoot(document.getElementById('page'));
 main.render(
   <div>
     <QueryClientProvider client={queryClient}>
-      <HashRouter>
+      <BrowserRouter>
         <Routes>
           <Route index element={<DashboardPage />} />
           <Route path="/repos" element={<ReposPage />} />
           <Route path="/assistant" element={<AssistantPage />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </QueryClientProvider>
   </div>
 );

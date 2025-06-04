@@ -32,6 +32,7 @@ export async function getRawRepoData(repo: string) {
   return response.data;
 }
 
+// Request all languages used in a repo
 export async function getRawRepoLangs(repo: string) {
   const response = await octokit.request('GET /repos/{owner}/{repo}/languages', {
     owner: user,
