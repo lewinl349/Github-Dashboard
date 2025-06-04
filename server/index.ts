@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from 'cors';
 import { parseAllRepos, parseRepoInfo, calculateAvgLang } from './jsonhelper';
-import { getRawAllRepos, getRawRepoData, getRawRepoLangs } from './githubhelper';
+import { getUser, getRawAllRepos, getRawRepoData, getRawRepoLangs } from './githubhelper';
 
 // =================================
 // Setup
@@ -14,6 +14,8 @@ const user: string = process.env.USER;
 
 // Allow react to get access to the port
 app.use(cors());
+var langs = new Map();
+var repos = [];
 
 // =================================
 // Return a list of repositories
@@ -25,7 +27,6 @@ async function generateReposList() {
 
 app.get('/repos/all', async (req, res) => {
   try {
-    var repos = await generateReposList();
     res.json(repos);
 
   } catch (error) {
@@ -51,7 +52,6 @@ async function findCommonLanguages() {
 
 app.get('/repos/langs', async (req, res) => {
   try {
-    var langs = await findCommonLanguages();
     const obj = Object.fromEntries(langs);
     res.json(obj);
 
@@ -71,6 +71,24 @@ app.get('/user/name', async (req, res) => {
 })
 
 // =================================
-app.listen(port, () => {
+var ready: boolean = false;
+
+async function initData() {
+  try {
+    langs = await findCommonLanguages();
+  repos = await generateReposList();
+  return true;
+  } catch {
+    return false;
+  }
+  
+}
+
+app.get('/ready', async (req, res) => {
+  res.send(ready);
+})
+
+app.listen(port, async () => {
+  ready = await initData();
   console.log(`Sucessfully listening on port ${port}. Open http://localhost:3000/`);
 })
