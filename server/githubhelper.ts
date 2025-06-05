@@ -44,3 +44,13 @@ export async function getRawRepoLangs(repo: string) {
 
   return response.data;
 }
+
+export async function getRawUser() {
+  const response = await octokit.request('GET /user', {
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28'
+    }
+  })
+
+  return response.data;
+}

@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "runelec": "electron .",
+    "server": "npx tsx server/index.ts",
     "start": "concurrently \"npm run dev\" \"npm run runelec\" \"npx tsx server/index.ts\""
   },
   "dependencies": {
