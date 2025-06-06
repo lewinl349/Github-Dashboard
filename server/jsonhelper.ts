@@ -18,11 +18,11 @@ export function parseRepoInfo(input: string) {
     return;
 }
 
-export async function calculateAvgLang(repos: string[]) {
+export async function calculateAvgLang(user: string, repos: string[]) {
     const langs = new Map();
     
     for (var repo of repos) {
-        const json = await getRawRepoLangs(repo);
+        const json = await getRawRepoLangs(user, repo);
         
         for (var [key, value] of Object.entries(json)) {
             if (langs.has(key)) {

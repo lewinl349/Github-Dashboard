@@ -3,8 +3,6 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: 'server/secrets/keys.env' });
 
-const user: string = process.env.USER;
-
 const octokit = new Octokit({
   auth: process.env.TOKEN
 });
@@ -20,7 +18,7 @@ export async function getRawAllRepos() {
 }
 
 // Request to get all data from a repo
-export async function getRawRepoData(repo: string) {
+export async function getRawRepoData(user: string, repo: string) {
   const response = await octokit.request('GET /repos/{owner}/{repo}', {
     owner: user,
     repo: repo,
@@ -33,7 +31,7 @@ export async function getRawRepoData(repo: string) {
 }
 
 // Request all languages used in a repo
-export async function getRawRepoLangs(repo: string) {
+export async function getRawRepoLangs(user: string, repo: string) {
   const response = await octokit.request('GET /repos/{owner}/{repo}/languages', {
     owner: user,
     repo: repo,

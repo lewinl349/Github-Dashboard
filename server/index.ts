@@ -4,6 +4,8 @@ import cors from 'cors';
 import { parseAllRepos, parseRepoInfo, calculateAvgLang } from './jsonhelper';
 import { getRawUser, getRawAllRepos, getRawRepoData, getRawRepoLangs } from './githubhelper';
 
+// IMPORTANT NOTE: run ../start in the URL to load data from github
+
 // =================================
 // Setup
 dotenv.config({ path: 'server/secrets/keys.env' });
@@ -13,6 +15,9 @@ const port: number = parseInt(process.env.PORT) || 3000;
 
 // Allow react to get access to the port
 app.use(cors());
+
+var user: string = "Github User";
+var langs = new Map(); // Return certain stats from a repository
 
 // =================================
 // Return a list of repositories
@@ -36,13 +41,10 @@ app.get('/repos/all', async (req, res) => {
 });
 
 // =================================
-// Return certain stats from a repository
-var langs = new Map();
-
 // Return a Map object of each languages and their bytes
 async function findCommonLanguages() {
   const repos = await generateReposList();
-  return await calculateAvgLang(repos);
+  return await calculateAvgLang(user, repos);
 }
 
 app.get('/repos/langs', async (req, res) => {
@@ -59,15 +61,23 @@ app.get('/repos/langs', async (req, res) => {
 
 // =================================
 // Github User Information
-var user: string = "Github User";
+var profilepic: string = "https://avatars.githubusercontent.com/u/121594011?v=4";
+var numOfRepos: number = 0;
 
 async function parseUserInfo() {
   const userData = await getRawUser();
   user = userData.login;
+  profilepic = userData.avatar_url;
 }
 
-app.get('/user/name', async (req, res) => {
-  res.json(user);
+app.get('/user/data', async (req, res) => {
+  var data = new Map();
+
+  data.set("user", user);
+  data.set("pfp", profilepic);
+  data.set("nofrepo", numOfRepos);
+
+  res.json(Object.fromEntries(data));
 })
 
 // =================================
@@ -78,6 +88,7 @@ async function initData() {
     await parseUserInfo();
     langs = await findCommonLanguages();
     repos = await generateReposList();
+    numOfRepos = repos.length;
     
     return true;
   } catch {
@@ -89,7 +100,7 @@ async function initData() {
 // Initialize all data when the app starts
 app.get('/start', async (req, res) => {
   ready = await initData();
-  res.json(ready);
+  res.json(ready); 
 })
 
 app.listen(port, async () => {

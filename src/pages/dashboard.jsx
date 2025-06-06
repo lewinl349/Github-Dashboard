@@ -22,11 +22,22 @@ const options = {
 
 // Take in a map of languages and bytes used
 // Turn it into a ChartJS format
-function generateLangDataPie(map) {
+function generateLangDataPie(obj) {
+  var toSort = [];
   var langs = [];
   var bytes = [];
 
-  for (var [key, value] of Object.entries(map)) {
+  for (var [key, value] of Object.entries(obj)) {
+    toSort.push([key, value]);
+  }
+
+  // Negative if second number goes first, etc...
+  toSort.sort((x,y) => y[1] - x[1]);
+  if (toSort.length > 10) {
+    toSort = toSort.slice(0, 10);
+  }
+
+  for (var [key, value] of toSort) {
     langs.push(key);
     bytes.push(value);
   }
@@ -93,10 +104,10 @@ function StatBox({ title, stat }) {
 
 function WelcomeBanner() {
   const { isPending, error, data, isFetching } = useQuery({
-    queryKey: ['username'],
+    queryKey: ['userdata'],
     queryFn: async () => {
       const response = await fetch(
-        'http://localhost:3000/user/name',
+        'http://localhost:3000/user/data',
       )
       return await response.json()
     },
@@ -107,16 +118,22 @@ function WelcomeBanner() {
   if (error) return 'An error has occurred: ' + error.message
 
   return (
-    <div className="col-span-4 flex p-5 bg-base-100">
-      <img src="https://avatars.githubusercontent.com/u/121594011?v=4"
-        className="mx-5 w-20 h-20"></img>
-      <div>
-        <h1 className="text-3xl font-bold">Welcome back, {data}!</h1>
-        <p className="py-4">
-          Here's your summary for today:
-        </p>
+    <>
+      <div className="col-span-5 flex p-5 bg-base-100">
+        <img src={data.pfp}
+          className="mx-5 w-20 h-20"></img>
+        <div>
+          <h1 className="text-3xl font-bold">Welcome back, {data.user}!</h1>
+          <p className="py-4">
+            Here's your summary for today:
+          </p>
+        </div>
       </div>
-    </div>
+      <StatBox title={"# of Repos"} stat={data.nofrepo} />
+      <StatBox title={"Contributions"} stat={"521"} />
+      <StatBox title={"Stars"} stat={"18"} />
+    </>
+
   )
 }
 
@@ -136,45 +153,45 @@ function GraphsCaro() {
   if (error) return 'An error has occurred: ' + error.message
 
   return (
-    <div className="carousel rounded-box w-100">
+    <div className="carousel rounded-box w-150">
       <div id="item1" className="carousel-item w-full">
-        <div className="card shadow-sm w-100">
+        <div className="card shadow-sm w-150">
           <figure>
             <Pie data={generateLangDataPie(data)} options={options} />
           </figure>
           <div className="card-body">
-            <h2 className="card-title">Most Used Languages</h2>
-            <p>Pie Chart | File Size in Bytes</p>
+            <h2 className="text-center font-bold text-2xl">Most Used Languages</h2>
+            <p className="text-center">Pie Chart | File Size in Bytes</p>
           </div>
         </div>
       </div>
       <div id="item2" className="carousel-item w-full">
-        <div className="card bg-base-100 w-100 shadow-sm">
+        <div className="card bg-base-100 w-150 shadow-sm">
           <figure>
             <Bar data={generateLangDataBar(data)} options={options} />
           </figure>
           <div className="card-body">
-            <h2 className="card-title">Most Used Languages</h2>
-            <p>Bar Graph | File Size in Bytes</p>
+            <h2 className="text-center font-bold text-2xl">Most Used Languages</h2>
+            <p className="text-center">Bar Graph | File Size in Bytes</p>
           </div>
         </div>
       </div>
       <div id="item3" className="carousel-item w-full">
-        <div className="card bg-base-100 w-100 shadow-sm">
+        <div className="card bg-base-100 w-150 shadow-sm">
           <figure>
             <Doughnut data={generateLangDataPie(data)} options={options} />
           </figure>
           <div className="card-body">
-            <h2 className="card-title">Most Used Languages</h2>
-            <p>Doughnut Chart | File Size in Bytes</p>
+            <h2 className="text-center font-bold text-2xl">Most Used Languages</h2>
+            <p className="text-center">Doughnut Chart | File Size in Bytes</p>
           </div>
         </div>
       </div>
       <div id="item4" className="carousel-item w-full">
-        <div className="card bg-base-100 w-100 shadow-sm">
+        <div className="card bg-base-100 w-150 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-center">More coming soon!</h2>
-            <p></p>
+            <h2 className="text-center font-bold text-2xl">More coming soon!</h2>
+            <p className="text-center"></p>
           </div>
         </div>
       </div>
@@ -188,12 +205,9 @@ export default function Dashboard() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="grid grid-cols-4 grid-rows-6 gap-5 m-5">
+      <div className="grid grid-cols-5 grid-rows-6 gap-5 m-5">
         <WelcomeBanner />
-        <StatBox title={"# of Repos"} stat={"25"} />
-        <StatBox title={"Contributions"} stat={"521"} />
-        <StatBox title={"Stars"} stat={"18"} />
-        <div className="row-start-3 col-span-2 row-span-3 flex flex-col bg-base-100 p-5 items-center">
+        <div className="row-start-3 col-span-3 row-span-3 flex flex-col bg-base-100 p-5 items-center">
           <GraphsCaro />
           <div className="flex w-full justify-center gap-2 py-2">
             <a href="#item1" className="btn btn-circle">1</a>
