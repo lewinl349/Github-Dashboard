@@ -6,10 +6,11 @@
 A companion webapp for Github that displays profile summaries (contributions, commits, etc...) and allow users to add localized notes for each respository.
 
 ## Technologies
-- Electron JS
-- React + Vite
+- ElectronJS
+- React Router + Vite
+- TailwindCSS (Plugin: DaisyUI)
 - Express
-- (Packages: ChartJS, Octokit, Dotenv, React Router, React Query, DaisyUI)
+- (Packages: ChartJS, Octokit, Dotenv, React Query, React Icons)
 
 ## Features 
 - Visualizations of languages used and other profile stats
