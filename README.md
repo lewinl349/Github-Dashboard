@@ -15,6 +15,5 @@ A companion webapp for Github that displays profile summaries (contributions, co
 ## Features 
 - Visualizations of languages used and other profile stats
 - Summary of upcoming tasks
-- For each repo: TODO list, notes, custom icon, pins 
-- Repo folders
-- Different themes
+- For each repo: TODO list, notes, custom icon, pins
+- AI Assistant to help with commits
