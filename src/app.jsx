@@ -15,7 +15,12 @@ function Main() {
     },
   })
 
-  if (isPending) return (<span className="loading loading-spinner text-primary h-screen"></span>)
+  if (isPending) return (
+    <div className="flex justify-center h-screen">
+      <span className="loading loading-spinner loading-xl text-primary"></span>
+    </div>
+    
+  )
 
   if (error) return 'An error has occurred: ' + error.message
 
