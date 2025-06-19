@@ -43,7 +43,6 @@ app.get('/repos/all', async (req, res) => {
 // =================================
 // Return a Map object of each languages and their bytes
 async function findCommonLanguages() {
-  const repos = await generateReposList();
   return await calculateAvgLang(user, repos);
 }
 
@@ -86,8 +85,8 @@ var ready: boolean = false;
 async function initData() {
   try {
     await parseUserInfo();
-    langs = await findCommonLanguages();
     repos = await generateReposList();
+    langs = await findCommonLanguages();
     numOfRepos = repos.length;
     
     return true;

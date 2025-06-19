@@ -53,13 +53,13 @@ function RepoTable() {
                   </div>
                 </div>
                 <div>
-                  <div className="font-bold">{repo}</div>
+                  <div className="font-bold">{repo.name}</div>
                   <div className="text-sm opacity-50">Github User</div>
                 </div>
               </div>
             </td>
             <td>
-              Temp repo description ========================== A really cool repo!
+              {repo.desc}
             </td>
             <td>Python, Javascript</td>
             <th>
