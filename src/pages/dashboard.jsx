@@ -161,7 +161,7 @@ function GraphsCaro() {
           </figure>
           <div className="card-body">
             <h2 className="text-center font-bold text-2xl">Most Used Languages</h2>
-            <p className="text-center">Pie Chart | File Size in Bytes</p>
+            <p className="text-center">Pie Chart | File Size in Bytes | Data from repos owned by others aren't counted</p>
           </div>
         </div>
       </div>

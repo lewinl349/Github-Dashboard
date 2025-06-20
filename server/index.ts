@@ -1,10 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from 'cors';
-import { parseAllRepos, parseRepoInfo, calculateAvgLang } from './jsonhelper';
-import { getRawUser, getRawAllRepos, getRawRepoData, getRawRepoLangs } from './githubhelper';
+import { parseAllRepos, calculateAvgLang } from './jsonhelper';
+import { getRawUser, getRawAllRepos } from './githubhelper';
 
 // IMPORTANT NOTE: run ../start in the URL to load data from github
+// FIXME: languages aren't showing for some repositories
+// TODO: Check other owner's repos by replacing "user" with "repo.owner"
+// Maybe exclude dashboard data from other owner's repos
+// TODO: Research other interesting summaries or statss
 
 // =================================
 // Setup
@@ -16,17 +20,22 @@ const port: number = parseInt(process.env.PORT) || 3000;
 // Allow react to get access to the port
 app.use(cors());
 
+// Variables and default values
+// User data
 var user: string = "Github User";
+var profilepic: string = "https://avatars.githubusercontent.com/u/121594011?v=4";
+var numOfRepos: number = 0;
+
+// Repo data
 var langs = new Map(); // Return certain stats from a repository
+var repos = [];
 
 // =================================
 // Return a list of repositories
-var repos = [];
-
 async function generateReposList() {
   const response = await getRawAllRepos();
   const data = JSON.stringify(response);
-  return parseAllRepos(data, user);
+  return parseAllRepos(data);
 }
 
 app.get('/repos/all', async (req, res) => {
@@ -60,9 +69,6 @@ app.get('/repos/langs', async (req, res) => {
 
 // =================================
 // Github User Information
-var profilepic: string = "https://avatars.githubusercontent.com/u/121594011?v=4";
-var numOfRepos: number = 0;
-
 async function parseUserInfo() {
   const userData = await getRawUser();
   user = userData.login;
@@ -93,7 +99,6 @@ async function initData() {
   } catch {
     return false;
   }
-
 }
 
 // Initialize all data when the app starts

@@ -24,20 +24,20 @@ function RepoTable() {
       {/* head */}
       <thead>
         <tr>
-          <th>
+          <th className="w-1/32">
             <label>
               <input type="checkbox" className="checkbox" />
             </label>
           </th>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Languages Used</th>
-          <th></th>
+          <th className="w-1/8">Name</th>
+          <th className="w-1/3">Description</th>
+          <th className="w-1/10">Languages Used</th>
+          <th className="w-1/16"></th>
         </tr>
       </thead>
       {data.map((repo) => (
         <tbody>
-          <tr>
+          <tr className="hover:bg-base-100">
             <th>
               <label>
                 <input type="checkbox" className="checkbox" />
@@ -54,14 +54,14 @@ function RepoTable() {
                 </div>
                 <div>
                   <div className="font-bold">{repo.name}</div>
-                  <div className="text-sm opacity-50">Github User</div>
+                  <div className="text-sm opacity-50">{repo.owner}</div>
                 </div>
               </div>
             </td>
             <td>
               {repo.desc}
             </td>
-            <td>Python, Javascript</td>
+            <td>{repo.langs.join(", ")}</td>
             <th>
               <button className="btn btn-ghost btn-xs">Edit</button>
             </th>
@@ -78,8 +78,8 @@ export default function Repos() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex flex-col">
-        <div className="text-3xl font-bold my-3">Your Repositories</div>
+      <div className="flex flex-col my-5 mx-10">
+        <div className="text-3xl font-bold">Your Repositories</div>
         <div className="overflow-x-auto">
           <RepoTable />
         </div>

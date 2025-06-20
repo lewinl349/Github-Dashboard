@@ -17,19 +17,6 @@ export async function getRawAllRepos() {
   return response.data;
 }
 
-// Request to get all data from a repo
-export async function getRawRepoData(user: string, repo: string) {
-  const response = await octokit.request('GET /repos/{owner}/{repo}', {
-    owner: user,
-    repo: repo,
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-  })
-
-  return response.data;
-}
-
 // Request all languages used in a repo
 export async function getRawRepoLangs(user: string, repo: string) {
   const response = await octokit.request('GET /repos/{owner}/{repo}/languages', {
