@@ -6,6 +6,11 @@ const createWindow = () => {
     height: 900
   });
 
+  // Open links in another window (That has the target="_blank")
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  })
   win.loadURL('http://localhost:5173/');
 }
 

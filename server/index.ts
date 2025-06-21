@@ -6,8 +6,6 @@ import { getRawUser, getRawAllRepos } from './githubhelper';
 
 // IMPORTANT NOTE: run ../start in the URL to load data from github
 // FIXME: languages aren't showing for some repositories
-// TODO: Check other owner's repos by replacing "user" with "repo.owner"
-// Maybe exclude dashboard data from other owner's repos
 // TODO: Research other interesting summaries or statss
 
 // =================================

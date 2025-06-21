@@ -63,7 +63,10 @@ function RepoTable() {
             </td>
             <td>{repo.langs.join(", ")}</td>
             <th>
-              <button className="btn btn-ghost btn-xs">Edit</button>
+              <button className="btn btn-outline btn-primary btn-xs">Edit</button>
+              <a href={repo.link} target="_blank" rel="noopener noreferrer"> 
+                <button className="btn btn-outline btn-primary btn-xs">Link</button>
+              </a>
             </th>
           </tr>
         </tbody>
