@@ -1,8 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from 'cors';
-import { parseAllRepos, calculateAvgLang } from './jsonhelper';
+import { parseAllRepos, calculateAvgLang, parseUserData, calculateTotalContributions } from './jsonhelper';
 import { getRawUser, getRawAllRepos } from './githubhelper';
+import type { Repo, User } from './types';
 
 // IMPORTANT NOTE: run ../start in the URL to load data from github
 // FIXME: languages aren't showing for some repositories
@@ -19,21 +20,19 @@ const port: number = parseInt(process.env.PORT) || 3000;
 app.use(cors());
 
 // Variables and default values
-// User data
-var user: string = "Github User";
-var profilepic: string = "https://avatars.githubusercontent.com/u/121594011?v=4";
-var numOfRepos: number = 0;
-
 // Repo data
-var langs = new Map(); // Return certain stats from a repository
-var repos = [];
+var langs: Map<string, number> = new Map(); // Return certain stats from a repository
+var repos: Repo[] = [];
+
+// User Object
+var user: User = null;
 
 // =================================
 // Return a list of repositories
-async function generateReposList() {
+async function generateReposList(): Promise<Repo[]> {
   const response = await getRawAllRepos();
   const data = JSON.stringify(response);
-  return parseAllRepos(data);
+  return parseAllRepos(data, user);
 }
 
 app.get('/repos/all', async (req, res) => {
@@ -49,8 +48,8 @@ app.get('/repos/all', async (req, res) => {
 
 // =================================
 // Return a Map object of each languages and their bytes
-async function findCommonLanguages() {
-  return await calculateAvgLang(user, repos);
+async function findCommonLanguages(): Promise<Map<string, number>> {
+  return await calculateAvgLang(user.name, repos);
 }
 
 app.get('/repos/langs', async (req, res) => {
@@ -67,31 +66,26 @@ app.get('/repos/langs', async (req, res) => {
 
 // =================================
 // Github User Information
-async function parseUserInfo() {
-  const userData = await getRawUser();
-  user = userData.login;
-  profilepic = userData.avatar_url;
+async function parseUserInfo(): Promise<void> {
+  const response = await getRawUser();
+  const data = JSON.stringify(response);
+  user = await parseUserData(data);
 }
 
 app.get('/user/data', async (req, res) => {
-  var data = new Map();
-
-  data.set("user", user);
-  data.set("pfp", profilepic);
-  data.set("nofrepo", numOfRepos);
-
-  res.json(Object.fromEntries(data));
+  res.json(user);
 })
 
 // =================================
 var ready: boolean = false;
 
-async function initData() {
+async function initData(): Promise<boolean> {
   try {
     await parseUserInfo();
     repos = await generateReposList();
     langs = await findCommonLanguages();
-    numOfRepos = repos.length;
+    await calculateTotalContributions(user, repos);
+    user.num_of_repos = repos.length;
     
     return true;
   } catch {

@@ -8,7 +8,7 @@ const octokit = new Octokit({
 });
 
 // Request to get all repos from an user.
-export async function getRawAllRepos() {
+export async function getRawAllRepos(): Promise<any> {
   const response = await octokit.request('GET /user/repos', {
     headers: {
       'X-GitHub-Api-Version': '2022-11-28'
@@ -18,7 +18,7 @@ export async function getRawAllRepos() {
 }
 
 // Request all languages used in a repo
-export async function getRawRepoLangs(user: string, repo: string) {
+export async function getRawRepoLangs(user: string, repo: string): Promise<any> {
   const response = await octokit.request('GET /repos/{owner}/{repo}/languages', {
     owner: user,
     repo: repo,
@@ -30,8 +30,20 @@ export async function getRawRepoLangs(user: string, repo: string) {
   return response.data;
 }
 
-export async function getRawUser() {
+export async function getRawUser(): Promise<any> {
   const response = await octokit.request('GET /user', {
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28'
+    }
+  })
+
+  return response.data;
+}
+
+export async function getRawContributors(user: string, repo: string): Promise<any> {
+  const response = await octokit.request('GET /repos/{owner}/{repo}/contributors', {
+    owner: user,
+    repo: repo,
     headers: {
       'X-GitHub-Api-Version': '2022-11-28'
     }

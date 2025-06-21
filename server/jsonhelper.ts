@@ -1,16 +1,9 @@
-import { getRawRepoLangs } from './githubhelper';
-
-export interface Repo {
-    name: string,
-    desc: string,
-    owner: string,
-    link: string,
-    langs: string[];
-}
+import { getRawRepoLangs, getRawContributors } from './githubhelper';
+import type { Repo, User } from './types';
 
 // Turn github's repo response into a list of repo objects
 // That the user is editing in
-export function parseAllRepos(input: string): Repo[] {
+export function parseAllRepos(input: string, user_obj: User): Repo[] {
     var repos = [];
     const data = JSON.parse(input);
 
@@ -20,14 +13,15 @@ export function parseAllRepos(input: string): Repo[] {
                      owner: data[i].owner.login, 
                      link: data[i].html_url,
                      langs: []});
+
+        user_obj.num_of_stars += data[i].stargazers_count;
                      
     }
-
     return repos;
 }
 
 // Get the languages used in repos OWNED by the user
-export async function calculateAvgLang(user: string, repos: Repo[]) {
+export async function calculateAvgLang(user: string, repos: Repo[]): Promise<Map<string, number>> {
     const langs = new Map();
 
     for (var repo of repos) {
@@ -49,4 +43,23 @@ export async function calculateAvgLang(user: string, repos: Repo[]) {
     };
 
     return langs;
+}
+
+// Parse basic information for the user
+export async function parseUserData(input: string): Promise<User> {
+    const data = JSON.parse(input);
+
+    return {name: data.login, pfp: data.avatar_url, num_of_repos: 0, num_of_contr: 0, num_of_stars: 0 }
+}
+
+// Get total commits from each repo
+export async function calculateTotalContributions(user_obj: User, repos: Repo[]): Promise<void> {
+    for (var repo of repos) {
+        const data = await getRawContributors(repo.owner, repo.name);
+        for (var item of data) {
+            if (item.login == user_obj.name) {
+                user_obj.num_of_contr += item.contributions;
+            }
+        }
+    }
 }
