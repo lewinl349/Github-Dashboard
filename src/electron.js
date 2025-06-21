@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron/main';
+import { shell } from 'electron';
 
 const createWindow = () => {
   const win = new BrowserWindow({

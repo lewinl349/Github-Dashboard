@@ -95,7 +95,7 @@ function generateLangDataBar(map) {
 
 function StatBox({ title, stat }) {
   return (
-    <div className="w-55 bg-base-100 rounded-box p-5">
+    <div className="w-55 bg-base-100 rounded-box p-5 border border-gray-400">
       <h1 className="text-m">{title}</h1>
       <p className="text-4xl font-bold">{stat}</p>
     </div>
@@ -119,7 +119,7 @@ function WelcomeBanner() {
 
   return (
     <>
-      <div className="col-span-5 flex p-5 bg-base-100">
+      <div className="col-span-5 flex p-5 bg-base-100 border border-gray-400">
         <img src={data.pfp}
           className="mx-5 w-20 h-20"></img>
         <div>
@@ -207,7 +207,7 @@ export default function Dashboard() {
       <Sidebar />
       <div className="grid grid-cols-5 grid-rows-6 gap-5 m-5">
         <WelcomeBanner />
-        <div className="row-start-3 col-span-3 row-span-3 flex flex-col bg-base-100 p-5 items-center">
+        <div className="row-start-3 col-span-3 row-span-3 flex flex-col bg-base-100 p-5 items-center border border-gray-400">
           <GraphsCaro />
           <div className="flex w-full justify-center gap-2 py-2">
             <a href="#item1" className="btn btn-circle">1</a>
@@ -218,7 +218,7 @@ export default function Dashboard() {
           <div className="btn rounded-box">Customize</div>
         </div>
 
-        <div className="col-span-2 row-span-3 list-row bg-base-100 p-5 rounded-box">
+        <div className="col-span-2 row-span-3 list-row bg-base-100 p-5 rounded-box border border-gray-400">
           <ul>
             <li className="text-xl font-bold">Upcoming</li>
           </ul>

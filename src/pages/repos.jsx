@@ -20,10 +20,10 @@ function RepoTable() {
   if (error) return 'An error has occurred: ' + error.message
 
   return (
-    <table className="table">
+    <table className="table border-base-content/5 bg-base-100 ">
       {/* head */}
       <thead>
-        <tr>
+        <tr className="border-gray-400 border-collapse">
           <th className="w-1/32">
             <label>
               <input type="checkbox" className="checkbox" />
@@ -37,7 +37,7 @@ function RepoTable() {
       </thead>
       {data.map((repo) => (
         <tbody>
-          <tr className="hover:bg-base-100">
+          <tr className="hover:bg-base-300 border border-gray-400 border-collapse">
             <th>
               <label>
                 <input type="checkbox" className="checkbox" />
@@ -59,9 +59,9 @@ function RepoTable() {
               </div>
             </td>
             <td>
-              {repo.desc}
+              {repo.desc || "No description provided."}
             </td>
-            <td>{repo.langs.join(", ")}</td>
+            <td>{repo.langs.join(", ") || "Not Documented"}</td>
             <th>
               <button className="btn btn-outline btn-primary btn-xs">Edit</button>
               <a href={repo.link} target="_blank" rel="noopener noreferrer"> 
@@ -81,8 +81,8 @@ export default function Repos() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex flex-col my-5 mx-10">
-        <div className="text-3xl font-bold">Your Repositories</div>
+      <div className="flex flex-col mx-10">
+        <div className="text-3xl font-bold my-5">Your Repositories</div>
         <div className="overflow-x-auto">
           <RepoTable />
         </div>

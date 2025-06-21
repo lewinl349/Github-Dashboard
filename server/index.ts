@@ -10,7 +10,7 @@ import { getRawUser, getRawAllRepos } from './githubhelper';
 
 // =================================
 // Setup
-dotenv.config({ path: 'server/secrets/keys.env' });
+dotenv.config({ path: 'server/keys.env' });
 
 const app = express();
 const port: number = parseInt(process.env.PORT) || 3000;

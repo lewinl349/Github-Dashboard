@@ -1,7 +1,7 @@
 import { Octokit } from "octokit";
 import dotenv from "dotenv";
 
-dotenv.config({ path: 'server/secrets/keys.env' });
+dotenv.config({ path: 'server/keys.env' });
 
 const octokit = new Octokit({
   auth: process.env.TOKEN
