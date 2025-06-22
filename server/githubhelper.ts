@@ -7,47 +7,78 @@ const octokit = new Octokit({
   auth: process.env.TOKEN
 });
 
-// Request to get all repos from an user.
-export async function getRawAllRepos(): Promise<any> {
-  const response = await octokit.request('GET /user/repos', {
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
+export async function requestRawUser(): Promise<any> {
+  const response = await octokit.graphql(
+    `
+    query {
+      viewer {
+        avatarUrl
+        login
+        name
+        contributionsCollection {
+          totalCommitContributions
+          totalPullRequestContributions
+          totalIssueContributions
+        }
+      }
     }
-  });
-  return response.data;
+    `
+  );
+
+  return response.viewer;
 }
 
-// Request all languages used in a repo
-export async function getRawRepoLangs(user: string, repo: string): Promise<any> {
-  const response = await octokit.request('GET /repos/{owner}/{repo}/languages', {
-    owner: user,
-    repo: repo,
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
+export async function requestRawRepos(): Promise<any> {
+  const response = await octokit.graphql(
+    `
+    query {
+      viewer {
+        repositories(first: 100, orderBy: {direction: DESC, field: UPDATED_AT}) {
+          totalCount
+          nodes {
+            name
+            description
+            url
+            stargazerCount
+            owner {
+              login
+            }
+            languages(first: 5, orderBy: {direction: DESC, field: SIZE}) {
+              edges {
+                size
+                node {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
     }
-  })
+    `
+  );
 
-  return response.data;
+  return response.viewer.repositories;
 }
 
-export async function getRawUser(): Promise<any> {
-  const response = await octokit.request('GET /user', {
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-  })
+// DEVELOPMENT USE
 
-  return response.data;
+async function checkRateLimit(): Promise<void> {
+  console.log(await octokit.graphql(
+    `
+    query {
+      viewer {
+        login
+      }
+      rateLimit {
+        limit
+        remaining
+        used
+        resetAt
+      }
+    }
+    `
+  ))
 }
 
-export async function getRawContributors(user: string, repo: string): Promise<any> {
-  const response = await octokit.request('GET /repos/{owner}/{repo}/contributors', {
-    owner: user,
-    repo: repo,
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-  })
-
-  return response.data;
-}
+// checkRateLimit();

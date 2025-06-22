@@ -123,14 +123,16 @@ function WelcomeBanner() {
         <img src={data.pfp}
           className="mx-5 w-20 h-20"></img>
         <div>
-          <h1 className="text-3xl font-bold">Welcome back, {data.name}!</h1>
+          <h1 className="text-3xl font-bold">Welcome back, {data.nickname || data.name}!</h1>
           <p className="py-4">
             Here's your summary for today:
           </p>
         </div>
       </div>
       <StatBox title={"# of Repos"} stat={data.num_of_repos} />
-      <StatBox title={"Contributions"} stat={data.num_of_contr} />
+      <StatBox title={"Commits (Past Year)"} stat={data.num_of_comm} />
+      <StatBox title={"Pull Req. (Past Year)"} stat={data.num_of_pull} />
+      <StatBox title={"Issues (Past Year)"} stat={data.num_of_issue} />
       <StatBox title={"Stars"} stat={data.num_of_stars} />
     </>
 

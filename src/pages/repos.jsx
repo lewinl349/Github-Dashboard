@@ -61,7 +61,7 @@ function RepoTable() {
             <td>
               {repo.desc || "No description provided."}
             </td>
-            <td>{repo.langs.join(", ") || "Not Documented"}</td>
+            <td>{Object.keys(repo.langs).join(", ") || "Not Documented"}</td>
             <th>
               <button className="btn btn-outline btn-primary btn-xs">Edit</button>
               <a href={repo.link} target="_blank" rel="noopener noreferrer"> 
