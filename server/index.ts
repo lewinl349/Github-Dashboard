@@ -8,6 +8,7 @@ import type { Repo, User } from './types';
 // TODO: Filter data for the past 30 days of contribution activity!
 // TODO: Research other interesting summaries or statss
 // FIXME: Languages graph
+// TODO: Paginate requests for repo
 
 // =================================
 // Setup
@@ -55,7 +56,14 @@ app.get('/repos/langs', async (req, res) => {
 // =================================
 // Github User Information
 app.get('/user/data', async (req, res) => {
-  res.json(user);
+  try {
+    res.json(user);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500)
+    res.send('Internal Server Error');
+  }
 })
 
 // =================================

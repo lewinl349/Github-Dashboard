@@ -47,10 +47,10 @@ export async function parseAllRepos(user_obj: User): Promise<Repo[]> {
 
 // Get the languages used in repos OWNED by the user
 export async function calculateAvgLang(user: string, repos: Repo[]): Promise<Record<string, number>> {
-    const langs = {};
+    const langs: Record<string, number> = {};
 
     for (var repo of repos) {
-        for (var [key, value] of Object.entries(repo)) {
+        for (var [key, value] of Object.entries(repo.langs)) {
             if (repo.owner == user) {
                 if (Object.hasOwn(langs, key)) {
                     langs[key] += value;
