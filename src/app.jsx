@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { ReposPage, DashboardPage, AssistantPage, NoPage } from './query';
+import { ReposPage, DashboardPage, AssistantPage, NoPage } from './pages';
 import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { QueryClient, QueryClientProvider, } from '@tanstack/react-query'

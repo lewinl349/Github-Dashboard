@@ -71,6 +71,7 @@ var ready: boolean = false;
 
 async function initData(): Promise<boolean> {
   try {
+    console.log("Gathering data...");
     user = await parseUserData();
     repos = await parseAllRepos(user);
     langs = await calculateAvgLang(user.name, repos);
@@ -83,7 +84,9 @@ async function initData(): Promise<boolean> {
 
 // Initialize all data when the app starts
 app.get('/start', async (req, res) => {
-  ready = await initData();
+  if (!ready) {
+    ready = await initData();
+  }
   res.json(ready); 
 })
 

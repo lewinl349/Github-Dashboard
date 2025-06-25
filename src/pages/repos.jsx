@@ -32,7 +32,7 @@ function RepoTable() {
           <th className="w-1/8">Name</th>
           <th className="w-1/3">Description</th>
           <th className="w-1/10">Languages Used</th>
-          <th className="w-1/16"></th>
+          <th className="w-1/12"></th>
         </tr>
       </thead>
       {data.map((repo) => (
@@ -63,9 +63,9 @@ function RepoTable() {
             </td>
             <td>{Object.keys(repo.langs).join(", ") || "Not Documented"}</td>
             <th>
-              <button className="btn btn-outline btn-primary btn-xs">Edit</button>
+              <button className="btn btn-outline btn-primary btn-xs mx-1">Edit</button>
               <a href={repo.link} target="_blank" rel="noopener noreferrer"> 
-                <button className="btn btn-outline btn-primary btn-xs">Link</button>
+                <button className="btn btn-outline btn-primary btn-xs mx-1">Link</button>
               </a>
             </th>
           </tr>

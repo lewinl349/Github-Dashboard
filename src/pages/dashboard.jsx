@@ -127,6 +127,16 @@ function WelcomeBanner() {
           <p className="py-4">
             Here's your summary for today:
           </p>
+          <div className="flex gap-5">
+            <div>
+              <h1 className="text-m">Due Today</h1>
+              <p className="text-4xl font-bold">4</p>
+            </div>
+            <div>
+              <h1 className="text-m">Open Issues</h1>
+              <p className="text-4xl font-bold">12</p>
+            </div>
+          </div>
         </div>
       </div>
       <StatBox title={"# of Repos"} stat={data.num_of_repos} />
@@ -207,7 +217,7 @@ export default function Dashboard() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="grid grid-cols-5 grid-rows-6 gap-5 m-5">
+      <div className="grid grid-flow-col md:grid-flow-row gap-5 m-5">
         <WelcomeBanner />
         <div className="row-start-3 col-span-3 row-span-3 flex flex-col bg-base-100 p-5 items-center border border-gray-400">
           <GraphsCaro />

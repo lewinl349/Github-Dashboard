@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "runelec": "electron .",
     "server": "npx tsx server/index.ts",
-    "start": "concurrently \"npm run dev\" \"npm run runelec\" \"npm run server\""
+    "start": "concurrently \"npm run dev\" \"npm run runelec\""
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.7",
