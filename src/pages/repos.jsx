@@ -2,9 +2,9 @@ import '../app.css';
 import Sidebar from '../components/Sidebar.jsx';
 import githubLogo from '../assets/github-mark-white.svg';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IconContext } from "react-icons";
-import { CgArrowsExpandRight, CgLink } from 'react-icons/cg';
+import { CgArrowsExpandRight, CgLink, CgTrash } from 'react-icons/cg';
 
 // ================= Components ================
 function RepoTable({ openDialog }) {
@@ -67,7 +67,7 @@ function RepoTable({ openDialog }) {
               </td>
               <td>{Object.keys(repo.langs).join(", ") || "Not Documented"}</td>
               <th>
-                <button value={repo.name} onClick={openDialog} className="btn btn-outline btn-primary btn-xs mx-1">
+                <button onClick={() => openDialog(repo.name)} className="btn btn-outline btn-primary btn-xs mx-1">
                   <CgArrowsExpandRight />
                 </button>
                 <a href={repo.link} target="_blank" rel="noopener noreferrer">
@@ -84,16 +84,79 @@ function RepoTable({ openDialog }) {
   )
 }
 
+function Checklist({ name, data }) {
+  return (
+    <IconContext.Provider value={{ className: "h-5 w-5" }}>
+      <ul className="list bg-base-100 rounded-box w-[25vw]">
+        <li className="flex justify-between align-center">
+          <div className="text-lg opacity-60 tracking-wide">
+            {name}
+          </div>
+          <button className="btn btn-sm btn-ghost">
+            + New
+          </button>
+        </li>
+        {data.map((item) => (
+          <li className="list-row hover:bg-base-300 group">
+            <label>
+              <input type="checkbox" className="checkbox" />
+            </label>
+            <div>
+              <div>{item}</div>
+              <div className="text-xs uppercase font-semibold opacity-60">Due in 1 week</div>
+            </div>
+            <button className="btn btn-square bg-red-700 hidden group-hover:inline-flex">
+              <CgTrash />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </IconContext.Provider>
+  )
+}
+
+function List({ name, data }) {
+  return (
+    <IconContext.Provider value={{ className: "h-5 w-5" }}>
+      <ul className="list bg-base-100 rounded-box shadow-md w-[25vw]">
+        <li className="flex justify-between align-center">
+          <div className="text-lg opacity-60 tracking-wide">
+            {name}
+          </div>
+          <button className="btn btn-sm btn-ghost">
+            + New
+          </button>
+        </li>
+        {data.map((item) => (
+          <li className="list-row flex justify-between hover:bg-base-300 group">
+            <div>
+              <div>{item}</div>
+            </div>
+            <button className="btn btn-square bg-red-700 hidden group-hover:inline-flex">
+              <CgTrash />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </IconContext.Provider>
+  )
+}
+
 function TODOWindow({ repoName }) {
   return (
     <dialog id="edit-repo-modal" className="modal">
-      <div className="modal-box">
+      <div className="modal-box max-w-6xl max-h-[85vh]">
         <h3 className="font-bold text-lg">Summary</h3>
-        <p className="py-1">{repoName}</p>
-        <div className="flex md:flex-col">
-
+        <p className="pt-1 pb-4">{repoName}</p>
+        <div className="flex flex-col lg:flex-row w-full justify-center">
+          <Checklist name="To-Do" data={["Item #1", "Item #2", "Item #3", "Item #4", "Item #5", "Item #6", "Item #7", "Item #8"]} />
+          <div className="divider lg:divider-horizontal"></div>
+          <List name="Notes" data={["Item #1", "Item #2", "Item #3", "Item #4", "Item #5aaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "So this is a really cool repository but it is missing a few features... Here are 3 of them"
+          ]} />
+          <div className="divider lg:divider-horizontal"></div>
+          <List name="Open Issues/PR" data={["Issue #14: Fix this bug", "Issue #17: This button is laggy", "PR: Someone requests to merge with the main branch!"]} />
         </div>
-        <p className="py-4">Press ESC key or click outside to close</p>
       </div>
       <form method="dialog" className="modal-backdrop">
         <button>close</button>
@@ -103,13 +166,12 @@ function TODOWindow({ repoName }) {
 }
 
 // ================= Layout =================
-
 export default function Repos() {
-  const [repo, setRepo] = useState("sss");
+  const [repo, setRepo] = useState("");
 
-  function openDialog(e) {
+  function openDialog(name) {
+    setRepo(name);
     document.getElementById('edit-repo-modal').showModal();
-    setRepo(e.target.value);
   }
 
   return (
