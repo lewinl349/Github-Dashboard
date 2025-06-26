@@ -23,15 +23,15 @@ export default function Sidebar() {
 
   return (
     <IconContext.Provider value={{ className: "h-5 w-5" }}>
-      <div class="drawer lg:drawer-open w-[12vw]">
-        <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content flex flex-col items-center justify-center">
-          <label for="my-drawer-2" class="btn btn-primary fixed left-0 bottom-0 drawer-button lg:hidden">
+      <div className="drawer lg:drawer-open w-[12vw]">
+        <input id="sidebar" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content flex flex-col items-center justify-center">
+          <label htmlFor="sidebar" className="btn btn-primary fixed left-0 bottom-0 drawer-button lg:hidden">
             <CgGhost />
           </label>
         </div>
-        <div class="drawer-side">
-          <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+        <div className="drawer-side">
+          <label htmlFor="sidebar" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-base-100 h-screen border-r border-gray-400 justify-between w-[12vw]">
             <div className="overflow-hidden w-full">
               <li className="menu-title font-bold truncate">Dashboard For Github</li>

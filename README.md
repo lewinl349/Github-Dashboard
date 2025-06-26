@@ -29,5 +29,5 @@ An unofficial webapp for Github with an AI assistant, dashboard summary, and loc
   ```
   TOKEN = "YOUR_GITHUB_TOKEN_HERE"
   ```
-4. Run the server `npm run server`
-5. Run the electron/react app `npm run start`
+3. Run the server `npm run server`
+4. Run the electron/react app `npm run start`s

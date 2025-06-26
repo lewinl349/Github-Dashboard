@@ -3,6 +3,9 @@ import Sidebar from '../components/Sidebar.jsx';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie, Bar, Doughnut } from "react-chartjs-2";
 import { useQuery } from '@tanstack/react-query';
+import { IconContext } from "react-icons";
+import { CgFolderAdd, CgFlagAlt } from "react-icons/cg";
+import { GoFileCode, GoFlame, GoGitPullRequest, GoStar } from "react-icons/go";
 
 // ================= Graphs =================
 // Languages chart
@@ -93,11 +96,14 @@ function generateLangDataBar(map) {
 
 // ================= COMPONENTS =================
 
-function StatBox({ title, stat }) {
+function StatBox({ title, stat, children }) {
   return (
-    <div className="w-55 bg-base-100 rounded-box p-5 border border-gray-400">
-      <h1 className="text-m">{title}</h1>
-      <p className="text-4xl font-bold">{stat}</p>
+    <div className="w-55 bg-base-100 rounded-box p-5 border border-gray-400 flex">
+      {children}
+      <div>
+        <h1 className="text-m">{title}</h1>
+        <p className="text-4xl font-bold">{stat}</p>
+      </div>
     </div>
   )
 }
@@ -118,7 +124,7 @@ function WelcomeBanner() {
   if (error) return 'An error has occurred: ' + error.message
 
   return (
-    <>
+    <IconContext.Provider value={{ className: "h-8 w-8 mr-2" }}>
       <div className="col-span-5 flex p-5 bg-base-100 border border-gray-400">
         <img src={data.pfp}
           className="mx-5 w-20 h-20"></img>
@@ -139,12 +145,12 @@ function WelcomeBanner() {
           </div>
         </div>
       </div>
-      <StatBox title={"# of Repos"} stat={data.num_of_repos} />
-      <StatBox title={"Commits (Past Year)"} stat={data.num_of_comm} />
-      <StatBox title={"Pull Req. (Past Year)"} stat={data.num_of_pull} />
-      <StatBox title={"Issues (Past Year)"} stat={data.num_of_issue} />
-      <StatBox title={"Stars"} stat={data.num_of_stars} />
-    </>
+      <StatBox title={"# of Repos"} stat={data.num_of_repos} children={<GoFileCode />} />
+      <StatBox title={"Commits (Past Year)"} stat={data.num_of_comm} children={<GoFlame /> } />
+      <StatBox title={"Pull Req. (Past Year)"} stat={data.num_of_pull} children={<GoGitPullRequest /> } />
+      <StatBox title={"Issues (Past Year)"} stat={data.num_of_issue} children={<CgFlagAlt /> } />
+      <StatBox title={"Stars"} stat={data.num_of_stars} children={<GoStar /> } />
+    </IconContext.Provider>
 
   )
 }
