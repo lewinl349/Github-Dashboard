@@ -113,7 +113,7 @@ function WelcomeBanner() {
     queryKey: ['userdata'],
     queryFn: async () => {
       const response = await fetch(
-        'http://localhost:3000/user/data',
+        'http://localhost:3000/api/user',
       )
       return await response.json()
     },
@@ -160,7 +160,7 @@ function GraphsCaro() {
     queryKey: ['langData'],
     queryFn: async () => {
       const response = await fetch(
-        'http://localhost:3000/repos/langs',
+        'http://localhost:3000/api/repos/languages',
       )
       return await response.json()
     },

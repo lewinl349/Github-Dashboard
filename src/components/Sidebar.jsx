@@ -11,7 +11,7 @@ export default function Sidebar() {
     queryKey: ['userdata'],
     queryFn: async () => {
       const response = await fetch(
-        'http://localhost:3000/user/data',
+        'http://localhost:3000/api/user',
       )
       return await response.json()
     },
@@ -65,7 +65,7 @@ export default function Sidebar() {
               />
               <div className="flex flex-col overflow-hidden">
                 <span className="font-bold truncate">{data.name}</span>
-                <span className="text-sm hover:underline hover:bold hover:text-red-300">Logout</span>
+                <span className="text-sm hover:underline hover:bold hover:text-red-300">Switch</span>
               </div>
             </div>
           </ul>

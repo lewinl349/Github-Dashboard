@@ -12,7 +12,7 @@ function RepoTable({ openDialog }) {
     queryKey: ['reposList'],
     queryFn: async () => {
       const response = await fetch(
-        'http://localhost:3000/repos/all',
+        'http://localhost:3000/api/repos',
       )
       return await response.json()
     },

@@ -7,7 +7,6 @@ import type { Repo, User } from './types';
 // IMPORTANT NOTE: run ../start in the URL to load data from github
 // TODO: Filter data for the past 30 days of contribution activity!
 // TODO: Research other interesting summaries or statss
-// FIXME: Languages graph
 // TODO: Paginate requests for repo
 
 // =================================
@@ -15,6 +14,7 @@ import type { Repo, User } from './types';
 dotenv.config({ path: 'server/keys.env' });
 
 const app = express();
+app.use(express.json());
 const port: number = parseInt(process.env.PORT) || 3000;
 
 // Allow react to get access to the port
@@ -30,7 +30,7 @@ var user: User = null;
 
 // =================================
 // Return a list of repositories
-app.get('/repos/all', async (req, res) => {
+app.get('/api/repos', async (req, res) => {
   try {
     res.json(repos);
 
@@ -42,7 +42,7 @@ app.get('/repos/all', async (req, res) => {
 });
 
 // =================================
-app.get('/repos/langs', async (req, res) => {
+app.get('/api/repos/languages', async (req, res) => {
   try {
     res.json(langs);
 
@@ -55,7 +55,7 @@ app.get('/repos/langs', async (req, res) => {
 
 // =================================
 // Github User Information
-app.get('/user/data', async (req, res) => {
+app.get('/api/user', async (req, res) => {
   try {
     res.json(user);
 
@@ -82,14 +82,19 @@ async function initData(): Promise<boolean> {
   }
 }
 
-// Initialize all data when the app starts
-app.get('/start', async (req, res) => {
+// Initialize data when user logins
+app.post('/api/authenticate/user', async (req, res) => {
+  console.log("Reading data...");
+  const body = req.body;
   if (!ready) {
+    ready = await initData();
+  }
+  else if (body.method == 'User' && body.username != user.name) {
     ready = await initData();
   }
   res.json(ready); 
 })
 
 app.listen(port, async () => {
-  console.log(`Sucessfully listening on port ${port}. Open http://localhost:3000/`);
+  console.log(`Sucessfully listening on port ${port}. Open http://localhost:${port}/`);
 })
