@@ -6,7 +6,6 @@
 An unofficial webapp for Github with an AI assistant, dashboard summary, and localized notes/TODO lists for each repository.
 
 ## Technology
-- ElectronJS
 - React Router + Vite
 - TailwindCSS (Plugin: DaisyUI)
 - Express
@@ -26,8 +25,8 @@ An unofficial webapp for Github with an AI assistant, dashboard summary, and loc
 
 1. Clone repo `git clone https://github.com/lewinl349/Github-Dashboard.git`
 2. install required packages `npm install`
-2. (Optional) In the folder `server`, create a `keys.env` file. The file should have
+3. In the folder `server`, create a `keys.env` file. The file should have
   ```
   TOKEN = "YOUR_GITHUB_TOKEN_HERE"
   ```
-3. Run electron app  `npm run start`
+4. Run React app  `npm run start`

@@ -3,11 +3,12 @@ import { ReposPage, DashboardPage, AssistantPage, NoPage } from './pages';
 import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { QueryClient, QueryClientProvider, } from '@tanstack/react-query'
-import { useState, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { LoginPage } from './components/login';
+import { ReadyProvider, useReady } from "./scripts/loginContextHelper.jsx";
 
 function Main() {
-  const [ready, setReady] = useState(false);
+  const { ready } = useReady();
 
   if (ready) {
     return (
@@ -22,7 +23,7 @@ function Main() {
     )
   }
   else {
-    return (<LoginPage setReady={setReady}/>)
+    return (<LoginPage />)
   }
 }
 
@@ -32,7 +33,9 @@ const main = createRoot(document.getElementById('page'));
 main.render(
   <div>
     <QueryClientProvider client={queryClient}>
-      <Main />
+      <ReadyProvider>
+        <Main />
+      </ReadyProvider>
     </QueryClientProvider>
   </div>
 );

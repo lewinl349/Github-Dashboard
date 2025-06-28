@@ -1,5 +1,5 @@
 import '../app.css';
-import Sidebar from '../components/Sidebar.jsx';
+import Sidebar from '../components/sidebar.jsx';
 import githubLogo from '../assets/github-mark-white.svg';
 import { useQuery } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';

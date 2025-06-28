@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from 'cors';
 import { parseAllRepos, calculateAvgLang, parseUserData } from './jsonhelper';
+import { getToken } from './githubhelper';
 import type { Repo, User } from './types';
 
 // IMPORTANT NOTE: run ../start in the URL to load data from github
@@ -28,8 +29,11 @@ var repos: Repo[] = [];
 // User Object
 var user: User = null;
 
+// States
+var ready: boolean = false;
+
 // =================================
-// Return a list of repositories
+// API
 app.get('/api/repos', async (req, res) => {
   try {
     res.json(repos);
@@ -37,11 +41,10 @@ app.get('/api/repos', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500)
-    res.send('Internal Server Error');
+    res.send('Failed to fetch repos');
   }
 });
 
-// =================================
 app.get('/api/repos/languages', async (req, res) => {
   try {
     res.json(langs);
@@ -49,16 +52,45 @@ app.get('/api/repos/languages', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500)
-    res.send('Internal Server Error');
+    res.send('Failed to fetch repository languages');
   }
 });
 
-// =================================
-// Github User Information
 app.get('/api/user', async (req, res) => {
   try {
     res.json(user);
 
+  } catch (error) {
+    console.error(error);
+    res.status(500)
+    res.send('Failed to fetch user data');
+  }
+})
+
+// =================================
+// Options/Token Check
+app.get('/token/github', async (req, res) => {
+  try {
+    if (process.env.GITHUB_TOKEN) {
+      const valid = await getToken();
+      res.json(valid);
+    } else {
+      res.json(false);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500)
+    res.send('Internal Server Error');
+  }
+})
+
+app.get('/token/openai', async (req, res) => {
+  try {
+    if (process.env.OPENAI_TOKEN) {
+      res.json(true);
+    } else {
+      res.json(false);
+    }
   } catch (error) {
     console.error(error);
     res.status(500)
@@ -67,15 +99,13 @@ app.get('/api/user', async (req, res) => {
 })
 
 // =================================
-var ready: boolean = false;
-
+// Initialize
 async function initData(): Promise<boolean> {
   try {
-    console.log("Gathering data...");
     user = await parseUserData();
     repos = await parseAllRepos(user);
     langs = await calculateAvgLang(user.name, repos);
-    
+
     return true;
   } catch {
     return false;
@@ -85,14 +115,10 @@ async function initData(): Promise<boolean> {
 // Initialize data when user logins
 app.post('/api/authenticate/user', async (req, res) => {
   console.log("Reading data...");
-  const body = req.body;
-  if (!ready) {
-    ready = await initData();
-  }
-  else if (body.method == 'User' && body.username != user.name) {
-    ready = await initData();
-  }
-  res.json(ready); 
+
+  ready = await initData();
+
+  res.json(ready);
 })
 
 app.listen(port, async () => {

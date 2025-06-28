@@ -5,8 +5,11 @@ import { Outlet, Link } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { CgPoll, CgCoffee, CgAlbum, CgGhost } from "react-icons/cg";
 import { useQuery } from '@tanstack/react-query';
+import { useReady } from "../scripts/loginContextHelper.jsx";
 
 export default function Sidebar() {
+  const { setReady } = useReady();
+
   const { isPending, error, data, isFetching } = useQuery({
     queryKey: ['userdata'],
     queryFn: async () => {
@@ -65,7 +68,7 @@ export default function Sidebar() {
               />
               <div className="flex flex-col overflow-hidden">
                 <span className="font-bold truncate">{data.name}</span>
-                <span className="text-sm hover:underline hover:bold hover:text-red-300">Switch</span>
+                <span onClick={() => setReady(false) } className="text-sm text-red-600 hover:underline hover:bold hover:text-red-300">Logout</span>
               </div>
             </div>
           </ul>

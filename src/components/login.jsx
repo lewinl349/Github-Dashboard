@@ -1,12 +1,31 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState, useEffect } from 'react';
+import { useReady } from "../scripts/loginContextHelper.jsx";
 
-export function LoginPage({ setReady }) {
-    const [user, setUser] = useState("");
+export function LoginPage() {
+    const { setReady } = useReady();
 
-    function changeUser(e) {
-        setUser(e.target.value);
-    }
+    const hasGithubToken = useQuery({
+        queryKey: ['gitToken'],
+        queryFn: async () => {
+            const response = await fetch(
+                'http://localhost:3000/token/github',
+            )
+            return await response.json()
+        },
+        staleTime: 0
+    });
+
+    const hasOpenAIToken = useQuery({
+        queryKey: ['openAIToken'],
+        queryFn: async () => {
+            const response = await fetch(
+                'http://localhost:3000/token/openai',
+            )
+            return await response.json()
+        },
+        staleTime: 0
+    });
 
     const tokenReq = useMutation({
         mutationFn: async (data) => {
@@ -18,8 +37,6 @@ export function LoginPage({ setReady }) {
 
             // Wait for the POST request to return if it is complete
             const ready = await response.json();
-
-            return ready;
         },
         onSuccess: () => {
             setReady(true);
@@ -46,22 +63,38 @@ export function LoginPage({ setReady }) {
     return (
         <div className="flex flex-col lg:flex-row justify-center py-[30vh]">
             <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-xs border p-4">
-                <legend className="fieldset-legend">Login with Username</legend>
-                <label className="label text-sm">Only public and local repos.</label>
+                <legend className="fieldset-legend">Token Check</legend>
+                <label className="label text-sm flex justify-between">
+                    <p>(Required) Github API Token</p>
+                    {
+                        hasGithubToken.data ?
+                            (<span className="badge badge-success">Verified</span>) :
+                            (<span className="badge badge-warning">Invalid</span>)
+                    }
+                    
+                </label>
+                <label className="label text-sm flex justify-between">
+                    <p>(Optional) OpenAI Token</p>
+                    {
+                        hasOpenAIToken.data ?
+                            (<span className="badge badge-success">Verified</span>) :
+                            (<span className="badge badge-warning">Invalid</span>)
+                    }
+                </label>
+                <label className="label text-sm text-pretty">
+                    Reopen application to refresh
+                </label>
 
-                <label className="label">Username</label>
-                <input type="user" className="input"
-                    placeholder="Enter your github username"
-                    onChange={changeUser} />
-
-                <button onClick={() => tokenReq.mutate({ method: "User", username: user })} className="btn btn-neutral mt-4">Login</button>
             </fieldset>
             <div className="divider lg:divider-horizontal"></div>
             <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-xs border p-4">
-                <legend className="fieldset-legend">Login with Github API Token</legend>
-                <label className="label text-sm text-pretty">If you want to view private repos, make sure there is private repository read scope for the token.</label>
+                <legend className="fieldset-legend">Unofficial Dashboard for Github</legend>
+                <label className="label text-sm text-pretty">
+                    If you want to include private repos,
+                    add read scope for private repositories as well. Instructions are in the README.md!
+                </label>
 
-                <button onClick={() => tokenReq.mutate({ method: "Token", username: "" })} className="btn btn-neutral mt-4">Login</button>
+                <button onClick={() => tokenReq.mutate({ method: "Token" })} disabled={!hasGithubToken.data} className="btn btn-neutral mt-4">Login</button>
             </fieldset>
         </div>
     )

@@ -1,17 +1,24 @@
 import { Octokit } from "octokit";
 import dotenv from "dotenv";
 
-var octokit = null;
+var octokit: Octokit = null;
 
 /**
  * Instantiate octokit object with token
  */
-export async function getToken(): Promise<void>{
+export async function getToken(): Promise<boolean>{
   dotenv.config({ path: 'server/keys.env' });
 
   octokit = new Octokit({
-    auth: process.env.TOKEN
+    auth: process.env.GITHUB_TOKEN
   });
+
+  try {
+    await octokit.rest.users.getAuthenticated();
+    return true;
+  } catch (e: any) {
+    return false;
+  }
 }
 
 /**
@@ -84,3 +91,25 @@ export async function requestRawRepos(): Promise<any> {
 
   return response.viewer.repositories;
 }
+
+// DEVELOPMENT USE
+async function checkRateLimit(): Promise<void> {
+  console.log(await octokit.graphql(
+    `
+    query {
+      viewer {
+        login
+      }
+      rateLimit {
+        limit
+        remaining
+        used
+        resetAt
+      }
+    }
+    `
+  ))
+}
+
+// getToken();
+// checkRateLimit();
