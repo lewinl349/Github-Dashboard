@@ -33,3 +33,5 @@
 **/dist
 LICENSE
 README.md
+server/*.env
+main.db

@@ -1,8 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from 'cors';
-import { parseAllRepos, calculateAvgLang, parseUserData } from './jsonhelper';
-import { getToken } from './githubhelper';
+import { router as db } from './routes/db';
+import { parseAllRepos, calculateAvgLang, parseUserData } from './jsonHelper';
+import { getToken } from './githubHelper';
 import type { Repo, User } from './types';
 
 // IMPORTANT NOTE: run ../start in the URL to load data from github
@@ -68,6 +69,11 @@ app.get('/api/user', async (req, res) => {
 })
 
 // =================================
+// DB
+
+app.use('/db', db);
+
+// =================================
 // Options/Token Check
 app.get('/token/github', async (req, res) => {
   try {
@@ -114,11 +120,18 @@ async function initData(): Promise<boolean> {
 
 // Initialize data when user logins
 app.post('/api/authenticate/user', async (req, res) => {
-  console.log("Reading data...");
+  try {
+    console.log("Reading data...");
 
-  ready = await initData();
+    ready = await initData();
 
-  res.json(ready);
+    res.json(ready);
+  } catch (error) {
+    console.error(error);
+    res.status(500)
+    res.send('Failed to fetch user data');
+  }
+
 })
 
 app.listen(port, async () => {

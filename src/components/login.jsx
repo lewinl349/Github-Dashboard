@@ -27,6 +27,7 @@ export function LoginPage() {
         staleTime: 0
     });
 
+    // Might be needed to send data when signing in
     const tokenReq = useMutation({
         mutationFn: async (data) => {
             const response = await fetch('http://localhost:3000/api/authenticate/user', {

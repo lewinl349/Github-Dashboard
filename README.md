@@ -6,12 +6,12 @@
 An unofficial webapp for Github with an AI assistant, dashboard summary, and localized notes/TODO lists for each repository.
 
 ## Technology
-- React Router + Vite
+- React Router + Vite + Express
 - TailwindCSS (Plugin: DaisyUI)
-- Express
+- SQLite3
 - GraphQL
-- Docker  
 - (Packages: ChartJS, Octokit, Dotenv, React Query, React Icons)
+- (Languages: Javascript, Typescript)
 
 ## Features 
 - Summary of languages used and other profile stats

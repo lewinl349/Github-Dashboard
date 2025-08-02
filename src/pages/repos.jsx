@@ -84,7 +84,7 @@ function RepoTable({ openDialog }) {
   )
 }
 
-function Checklist({ name, data }) {
+function Checklist({ name, data, hasCheckbox, hasEditing }) {
   return (
     <IconContext.Provider value={{ className: "h-5 w-5" }}>
       <ul className="list bg-base-100 rounded-box w-[25vw]">
@@ -92,12 +92,22 @@ function Checklist({ name, data }) {
           <div className="text-lg opacity-60 tracking-wide">
             {name}
           </div>
-          <button className="btn btn-sm btn-ghost">
-            + New
-          </button>
+          {hasEditing ? (
+            <button className="btn btn-sm btn-ghost">
+              + New
+            </button>) :
+            (<div></div>)
+          }
         </li>
         {data.map((item) => (
           <li className="list-row hover:bg-base-300 group">
+            {hasCheckbox ? (
+              <label>
+                <input type="checkbox" className="checkbox" />
+              </label>) :
+              (<div></div>)
+            }
+
             <label>
               <input type="checkbox" className="checkbox" />
             </label>
@@ -105,36 +115,13 @@ function Checklist({ name, data }) {
               <div>{item}</div>
               <div className="text-xs uppercase font-semibold opacity-60">Due in 1 week</div>
             </div>
-            <button className="btn btn-square bg-red-700 hidden group-hover:inline-flex">
-              <CgTrash />
-            </button>
-          </li>
-        ))}
-      </ul>
-    </IconContext.Provider>
-  )
-}
+            {hasEditing ? (
+              <button className="btn btn-square bg-red-700 hidden group-hover:inline-flex">
+                <CgTrash />
+              </button>) :
+              (<div></div>)
+            }
 
-function List({ name, data }) {
-  return (
-    <IconContext.Provider value={{ className: "h-5 w-5" }}>
-      <ul className="list bg-base-100 rounded-box shadow-md w-[25vw]">
-        <li className="flex justify-between align-center">
-          <div className="text-lg opacity-60 tracking-wide">
-            {name}
-          </div>
-          <button className="btn btn-sm btn-ghost">
-            + New
-          </button>
-        </li>
-        {data.map((item) => (
-          <li className="list-row flex justify-between hover:bg-base-300 group">
-            <div>
-              <div>{item}</div>
-            </div>
-            <button className="btn btn-square bg-red-700 hidden group-hover:inline-flex">
-              <CgTrash />
-            </button>
           </li>
         ))}
       </ul>
