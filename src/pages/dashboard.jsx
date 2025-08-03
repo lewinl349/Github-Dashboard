@@ -2,6 +2,7 @@ import '../app.css';
 import Sidebar from '../components/sidebar.jsx';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie, Bar, Doughnut } from "react-chartjs-2";
+import { customUseQuery } from '../hooks/queryHelper.jsx';
 import { useQuery } from '@tanstack/react-query';
 import { IconContext } from "react-icons";
 import { CgFlagAlt } from "react-icons/cg";
@@ -27,19 +28,10 @@ function StatBox({ title, stat, children }) {
 }
 
 function WelcomeBanner() {
-  const { isPending, error, data, isFetching } = useQuery({
-    queryKey: ['userdata'],
-    queryFn: async () => {
-      const response = await fetch(
-        'http://localhost:3000/api/user',
-      )
-      return await response.json()
-    },
-  })
+  const { isPending, error, data } = customUseQuery("N/A", "/api/user", "userdata");
 
-  if (isPending) return (<span className="loading loading-spinner text-primary"></span>)
-
-  if (error) return 'An error has occurred: ' + error.message
+  if (isPending) return (<span className="loading loading-spinner text-primary"></span>);
+  if (error) return 'An error has occurred: ' + error.message;
 
   return (
     <IconContext.Provider value={{ className: "h-8 w-8 mr-2" }}>
@@ -64,29 +56,20 @@ function WelcomeBanner() {
         </div>
       </div>
       <StatBox title={"# of Repos"} stat={data.num_of_repos} children={<GoFileCode />} />
-      <StatBox title={"Commits (Past Year)"} stat={data.num_of_comm} children={<GoFlame /> } />
-      <StatBox title={"Pull Req. (Past Year)"} stat={data.num_of_pull} children={<GoGitPullRequest /> } />
-      <StatBox title={"Issues (Past Year)"} stat={data.num_of_issue} children={<CgFlagAlt /> } />
-      <StatBox title={"Stars"} stat={data.num_of_stars} children={<GoStar /> } />
+      <StatBox title={"Commits (Past Year)"} stat={data.num_of_comm} children={<GoFlame />} />
+      <StatBox title={"Pull Req. (Past Year)"} stat={data.num_of_pull} children={<GoGitPullRequest />} />
+      <StatBox title={"Issues (Past Year)"} stat={data.num_of_issue} children={<CgFlagAlt />} />
+      <StatBox title={"Stars"} stat={data.num_of_stars} children={<GoStar />} />
     </IconContext.Provider>
 
   )
 }
 
 function GraphsCaro() {
-  const { isPending, error, data, isFetching } = useQuery({
-    queryKey: ['langData'],
-    queryFn: async () => {
-      const response = await fetch(
-        'http://localhost:3000/api/repos/languages',
-      )
-      return await response.json()
-    },
-  })
+  const { isPending, error, data } = customUseQuery("N/A", "/api/repos/languages", "langData");
 
-  if (isPending) return (<span className="loading loading-spinner text-primary"></span>)
-
-  if (error) return 'An error has occurred: ' + error.message
+  if (isPending) return (<span className="loading loading-spinner text-primary"></span>);
+  if (error) return 'An error has occurred: ' + error.message;
 
   return (
     <div className="carousel rounded-box w-150">

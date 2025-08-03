@@ -4,7 +4,7 @@ import type { TODOEntry, NoteEntry } from '../types';
 
 export var router = express.Router();
 
-router.get('/:name/:owner', async (req, res) => {
+router.get('/TODO/:owner/:name', async (req, res) => {
     try {
         // VALIDATE param
         // validate(req.params.repo);
@@ -21,6 +21,9 @@ router.get('/:name/:owner', async (req, res) => {
 
 router.post('/TODO/new', async (req, res) => {
     try {
+        const request = req.body;
+
+        
 
     } catch (error) {
         console.error(error);

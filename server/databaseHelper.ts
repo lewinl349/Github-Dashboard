@@ -101,4 +101,4 @@ await initTables();
 // const x = await fetchAll(db, "SELECT name FROM sqlite_master WHERE type = \"table\"", []);
 // console.log(x);
 
-console.log(await getTODOEntries("Github-Dashboard", "lewinl349"));
+// console.log(await getTODOEntries("Github-Dashboard", "lewinl349"));

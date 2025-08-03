@@ -4,21 +4,13 @@ import '../app.css';
 import { Outlet, Link } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { CgPoll, CgCoffee, CgAlbum, CgGhost } from "react-icons/cg";
-import { useQuery } from '@tanstack/react-query';
+import { customUseQuery } from '../hooks/queryHelper.jsx';
 import { useReady } from "../scripts/loginContextHelper.jsx";
 
 export default function Sidebar() {
   const { setReady } = useReady();
 
-  const { isPending, error, data, isFetching } = useQuery({
-    queryKey: ['userdata'],
-    queryFn: async () => {
-      const response = await fetch(
-        'http://localhost:3000/api/user',
-      )
-      return await response.json()
-    },
-  })
+  const { isPending, error, data } = customUseQuery("N/A", "/api/user", "userdata");
 
   if (isPending) return (<span className="loading loading-spinner text-primary"></span>)
 

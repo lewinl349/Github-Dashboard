@@ -1,32 +1,13 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useState, useEffect } from 'react';
+import { useMutation } from '@tanstack/react-query'
+import { customUseQuery } from '../hooks/queryHelper.jsx';
 import { useReady } from "../scripts/loginContextHelper.jsx";
 
 export function LoginPage() {
     const { setReady } = useReady();
 
-    const hasGithubToken = useQuery({
-        queryKey: ['gitToken'],
-        queryFn: async () => {
-            const response = await fetch(
-                'http://localhost:3000/token/github',
-            )
-            return await response.json()
-        },
-        staleTime: 0
-    });
-
-    const hasOpenAIToken = useQuery({
-        queryKey: ['openAIToken'],
-        queryFn: async () => {
-            const response = await fetch(
-                'http://localhost:3000/token/openai',
-            )
-            return await response.json()
-        },
-        staleTime: 0
-    });
-
+    const { isPending: pendingGT, error: errorGT, data: hasGithubToken } = customUseQuery("N/A", "/token/github", "gitToken");
+    const { isPending: pendingAIT, error: errorAIT, data: hasOpenAIToken } = customUseQuery("N/A", "/token/openai", "openAIToken");
+    
     // Might be needed to send data when signing in
     const tokenReq = useMutation({
         mutationFn: async (data) => {
@@ -46,6 +27,12 @@ export function LoginPage() {
             queryClient.invalidateQueries({ queryKey: ['reposList', 'langData', 'userdata'] })
         },
     })
+
+    if (pendingGT) return (<span className="loading loading-spinner text-primary"></span>);
+    if (errorGT) return 'An error has occurred: ' + errorGT.message;
+    
+    if (pendingAIT) return (<span className="loading loading-spinner text-primary"></span>);
+    if (errorAIT) return 'An error has occurred: ' + errorAIT.message;
 
     if (tokenReq.isPending) {
         return (
@@ -68,7 +55,7 @@ export function LoginPage() {
                 <label className="label text-sm flex justify-between">
                     <p>(Required) Github API Token</p>
                     {
-                        hasGithubToken.data ?
+                        hasGithubToken ?
                             (<span className="badge badge-success">Verified</span>) :
                             (<span className="badge badge-warning">Invalid</span>)
                     }
@@ -77,7 +64,7 @@ export function LoginPage() {
                 <label className="label text-sm flex justify-between">
                     <p>(Optional) OpenAI Token</p>
                     {
-                        hasOpenAIToken.data ?
+                        hasOpenAIToken ?
                             (<span className="badge badge-success">Verified</span>) :
                             (<span className="badge badge-warning">Invalid</span>)
                     }
@@ -95,7 +82,7 @@ export function LoginPage() {
                     add read scope for private repositories as well. Instructions are in the README.md!
                 </label>
 
-                <button onClick={() => tokenReq.mutate({ method: "Token" })} disabled={!hasGithubToken.data} className="btn btn-neutral mt-4">Login</button>
+                <button onClick={() => tokenReq.mutate({ method: "Token" })} disabled={!hasGithubToken} className="btn btn-neutral mt-4">Login</button>
             </fieldset>
         </div>
     )

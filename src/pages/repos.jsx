@@ -1,26 +1,17 @@
 import '../app.css';
 import Sidebar from '../components/sidebar.jsx';
 import githubLogo from '../assets/github-mark-white.svg';
-import { useQuery } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
+import { customUseQuery } from '../hooks/queryHelper.jsx';
+import { useState } from 'react';
 import { IconContext } from "react-icons";
 import { CgArrowsExpandRight, CgLink, CgTrash } from 'react-icons/cg';
 
 // ================= Components ================
 function RepoTable({ openDialog }) {
-  const { isPending, error, data, isFetching } = useQuery({
-    queryKey: ['reposList'],
-    queryFn: async () => {
-      const response = await fetch(
-        'http://localhost:3000/api/repos',
-      )
-      return await response.json()
-    },
-  })
+  const { isPending, error, data: repoData } = customUseQuery("N/A", "/api/repos", "reposList");
 
-  if (isPending) return (<span className="loading loading-spinner text-primary"></span>)
-
-  if (error) return 'An error has occurred: ' + error.message
+  if (isPending) return (<span className="loading loading-spinner text-primary"></span>);
+  if (error) return 'An error has occurred: ' + error.message;
 
   return (
     <IconContext.Provider value={{ className: "h-5 w-5" }}>
@@ -40,13 +31,13 @@ function RepoTable({ openDialog }) {
           </tr>
         </thead>
         <tbody>
-          {data.map((repo) => (
-            <tr key={repo.owner.concat(repo.name)} className="hover:bg-base-300 border border-gray-400 border-collapse">
-              <th>
+          {repoData instanceof Array ? repoData.map((repo) => (
+            <tr key={repo.owner + "/" + repo.name} className="hover:bg-base-300 border border-gray-400 border-collapse">
+              <td>
                 <label>
                   <input type="checkbox" className="checkbox" />
                 </label>
-              </th>
+              </td>
               <td>
                 <div className="flex items-center gap-3">
                   <div className="avatar">
@@ -66,18 +57,18 @@ function RepoTable({ openDialog }) {
                 {repo.desc || "No description provided."}
               </td>
               <td>{Object.keys(repo.langs).join(", ") || "Not Documented"}</td>
-              <th>
-                <button onClick={() => openDialog(repo.name)} className="btn btn-outline btn-primary btn-xs mx-1">
+              <td>
+                <button title="Expand TODO Window" onClick={() => openDialog(repo.name, repo.owner)} className="btn btn-outline btn-primary btn-xs mx-1">
                   <CgArrowsExpandRight />
                 </button>
                 <a href={repo.link} target="_blank" rel="noopener noreferrer">
-                  <button className="btn btn-outline btn-primary btn-xs mx-1">
+                  <button title="Open Github Page" className="btn btn-outline btn-primary btn-xs mx-1">
                     <CgLink />
                   </button>
                 </a>
-              </th>
+              </td>
             </tr>
-          ))}
+          )) : (<div>repoData</div>)}
         </tbody>
       </table>
     </IconContext.Provider>
@@ -99,20 +90,16 @@ function Checklist({ name, data, hasCheckbox, hasEditing }) {
             (<div></div>)
           }
         </li>
-        {data.map((item) => (
-          <li className="list-row hover:bg-base-300 group">
+        {data instanceof Array && data.length > 0 ? data.map((item) => (
+          <li key={item.id} className="list-row hover:bg-base-300 group">
             {hasCheckbox ? (
               <label>
                 <input type="checkbox" className="checkbox" />
               </label>) :
               (<div></div>)
             }
-
-            <label>
-              <input type="checkbox" className="checkbox" />
-            </label>
             <div>
-              <div>{item}</div>
+              <div>{item.desc}</div>
               <div className="text-xs uppercase font-semibold opacity-60">Due in 1 week</div>
             </div>
             {hasEditing ? (
@@ -121,29 +108,35 @@ function Checklist({ name, data, hasCheckbox, hasEditing }) {
               </button>) :
               (<div></div>)
             }
-
           </li>
-        ))}
+        )) : (<li className="list-row hover:bg-base-300 group">No Items...</li>)}
       </ul>
     </IconContext.Provider>
   )
 }
 
-function TODOWindow({ repoName }) {
+function TODOWindow({ repoName, ownerName }) {
+  const { isPending, error, data: repoData } = customUseQuery(`${ownerName}${repoName}`, `/db/TODO/${ownerName}/${repoName}`, "getTODO");
+
   return (
     <dialog id="edit-repo-modal" className="modal">
       <div className="modal-box max-w-6xl max-h-[85vh]">
-        <h3 className="font-bold text-lg">Summary</h3>
-        <p className="pt-1 pb-4">{repoName}</p>
-        <div className="flex flex-col lg:flex-row w-full justify-center">
-          <Checklist name="To-Do" data={["Item #1", "Item #2", "Item #3", "Item #4", "Item #5", "Item #6", "Item #7", "Item #8"]} />
-          <div className="divider lg:divider-horizontal"></div>
-          <List name="Notes" data={["Item #1", "Item #2", "Item #3", "Item #4", "Item #5aaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "So this is a really cool repository but it is missing a few features... Here are 3 of them"
-          ]} />
-          <div className="divider lg:divider-horizontal"></div>
-          <List name="Open Issues/PR" data={["Issue #14: Fix this bug", "Issue #17: This button is laggy", "PR: Someone requests to merge with the main branch!"]} />
-        </div>
+        <form method="dialog" className="grid gap-5">
+          <h3 className="font-bold text-lg">Summary</h3>
+          <button className="btn btn-soft col-start-6">Cancel</button>
+          <button className="btn btn-soft btn-primary col-start-7">Save</button>
+        </form>
+        <p className="pt-1 pb-1 font-bold">{repoName}</p>
+        <p className="pt-1 pb-4">{ownerName}</p>
+        {isPending || error ? (<div>An error has occurred</div>) :
+          (<div className="flex flex-col lg:flex-row w-full justify-center">
+            <Checklist name="To-Do" hasCheckbox={true} hasEditing={true} data={repoData} />
+            <div className="divider lg:divider-horizontal"></div>
+            <Checklist name="Notes" hasCheckbox={false} hasEditing={true} data={repoData} />
+            <div className="divider lg:divider-horizontal"></div>
+            <Checklist name="Open Issues/PR" hasCheckbox={false} hasEditing={false} data={repoData} />
+          </div>)
+        }
       </div>
       <form method="dialog" className="modal-backdrop">
         <button>close</button>
@@ -155,16 +148,18 @@ function TODOWindow({ repoName }) {
 // ================= Layout =================
 export default function Repos() {
   const [repo, setRepo] = useState("");
+  const [owner, setOwner] = useState("");
 
-  function openDialog(name) {
+  function openDialog(name, owner) {
     setRepo(name);
+    setOwner(owner);
     document.getElementById('edit-repo-modal').showModal();
   }
 
   return (
     <div className="flex">
       <Sidebar />
-      <TODOWindow repoName={repo} />
+      <TODOWindow repoName={repo} ownerName={owner} />
       <div className="flex flex-col mx-10">
         <div className="text-3xl font-bold my-5">Your Repositories</div>
         <div className="overflow-x-auto">
