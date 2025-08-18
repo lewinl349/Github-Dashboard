@@ -1,98 +1,17 @@
 import '../app.css';
-import Sidebar from '../components/Sidebar.jsx';
+import Sidebar from '../components/sidebar.jsx';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie, Bar, Doughnut } from "react-chartjs-2";
+import { customUseQuery } from '../hooks/queryHelper.jsx';
 import { useQuery } from '@tanstack/react-query';
 import { IconContext } from "react-icons";
-import { CgFolderAdd, CgFlagAlt } from "react-icons/cg";
+import { CgFlagAlt } from "react-icons/cg";
 import { GoFileCode, GoFlame, GoGitPullRequest, GoStar } from "react-icons/go";
+import { options, generateLangDataBar, generateLangDataPie } from '../scripts/chartJSHelper.jsx'
 
 // ================= Graphs =================
 // Languages chart
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
-
-// ================= CHARTJS SETUP =================
-
-const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: 'right',
-    }
-  }
-}
-
-// Take in a map of languages and bytes used
-// Turn it into a ChartJS format
-function generateLangDataPie(obj) {
-  var toSort = [];
-  var langs = [];
-  var bytes = [];
-
-  for (var [key, value] of Object.entries(obj)) {
-    toSort.push([key, value]);
-  }
-
-  // Negative if second number goes first, etc...
-  toSort.sort((x,y) => y[1] - x[1]);
-  if (toSort.length > 10) {
-    toSort = toSort.slice(0, 10);
-  }
-
-  for (var [key, value] of toSort) {
-    langs.push(key);
-    bytes.push(value);
-  }
-
-  const data = {
-    labels: langs,
-    datasets: [{
-      label: 'Size of Files (Bytes)',
-      data: bytes,
-      backgroundColor: [
-        'rgb(255, 99, 132)',
-        'rgb(54, 162, 235)',
-        'rgb(255, 205, 86)',
-        'rgb(75, 192, 192)',
-        'rgb(255, 159, 64)'
-
-      ],
-      borderColor: [
-        'rgb(123, 49, 65)',
-        'rgb(27, 85, 123)',
-        'rgb(131, 104, 42)',
-        'rgb(51, 122, 122)',
-        'rgb(131, 86, 41)'
-      ],
-      hoverOffset: 4
-    }]
-  };
-
-  return data;
-}
-
-function generateLangDataBar(map) {
-  var langs = [];
-  var bytes = [];
-
-  for (var [key, value] of Object.entries(map)) {
-    langs.push(key);
-    bytes.push(value);
-  }
-
-  const data = {
-    labels: langs,
-    datasets: [{
-      label: 'Usage',
-      data: bytes,
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)'
-    }]
-  };
-
-  return data;
-}
 
 // ================= COMPONENTS =================
 
@@ -109,19 +28,10 @@ function StatBox({ title, stat, children }) {
 }
 
 function WelcomeBanner() {
-  const { isPending, error, data, isFetching } = useQuery({
-    queryKey: ['userdata'],
-    queryFn: async () => {
-      const response = await fetch(
-        'http://localhost:3000/user/data',
-      )
-      return await response.json()
-    },
-  })
+  const { isPending, error, data } = customUseQuery("N/A", "/api/user", "userdata");
 
-  if (isPending) return (<span className="loading loading-spinner text-primary"></span>)
-
-  if (error) return 'An error has occurred: ' + error.message
+  if (isPending) return (<span className="loading loading-spinner text-primary"></span>);
+  if (error) return 'An error has occurred: ' + error.message;
 
   return (
     <IconContext.Provider value={{ className: "h-8 w-8 mr-2" }}>
@@ -146,29 +56,20 @@ function WelcomeBanner() {
         </div>
       </div>
       <StatBox title={"# of Repos"} stat={data.num_of_repos} children={<GoFileCode />} />
-      <StatBox title={"Commits (Past Year)"} stat={data.num_of_comm} children={<GoFlame /> } />
-      <StatBox title={"Pull Req. (Past Year)"} stat={data.num_of_pull} children={<GoGitPullRequest /> } />
-      <StatBox title={"Issues (Past Year)"} stat={data.num_of_issue} children={<CgFlagAlt /> } />
-      <StatBox title={"Stars"} stat={data.num_of_stars} children={<GoStar /> } />
+      <StatBox title={"Commits (Past Year)"} stat={data.num_of_comm} children={<GoFlame />} />
+      <StatBox title={"Pull Req. (Past Year)"} stat={data.num_of_pull} children={<GoGitPullRequest />} />
+      <StatBox title={"Issues (Past Year)"} stat={data.num_of_issue} children={<CgFlagAlt />} />
+      <StatBox title={"Stars"} stat={data.num_of_stars} children={<GoStar />} />
     </IconContext.Provider>
 
   )
 }
 
 function GraphsCaro() {
-  const { isPending, error, data, isFetching } = useQuery({
-    queryKey: ['langData'],
-    queryFn: async () => {
-      const response = await fetch(
-        'http://localhost:3000/repos/langs',
-      )
-      return await response.json()
-    },
-  })
+  const { isPending, error, data } = customUseQuery("N/A", "/api/repos/languages", "langData");
 
-  if (isPending) return (<span className="loading loading-spinner text-primary"></span>)
-
-  if (error) return 'An error has occurred: ' + error.message
+  if (isPending) return (<span className="loading loading-spinner text-primary"></span>);
+  if (error) return 'An error has occurred: ' + error.message;
 
   return (
     <div className="carousel rounded-box w-150">
@@ -221,28 +122,24 @@ function GraphsCaro() {
 
 export default function Dashboard() {
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="grid grid-flow-col md:grid-flow-row gap-5 m-5">
-        <WelcomeBanner />
-        <div className="row-start-3 col-span-3 row-span-3 flex flex-col bg-base-100 p-5 items-center border border-gray-400">
-          <GraphsCaro />
-          <div className="flex w-full justify-center gap-2 py-2">
-            <a href="#item1" className="btn btn-circle">1</a>
-            <a href="#item2" className="btn btn-circle">2</a>
-            <a href="#item3" className="btn btn-circle">3</a>
-            <a href="#item4" className="btn btn-circle">4</a>
-          </div>
-          <div className="btn rounded-box">Customize</div>
+    <div className="grid grid-flow-col md:grid-flow-row gap-5 m-5">
+      <WelcomeBanner />
+      <div className="row-start-3 col-span-3 row-span-3 flex flex-col bg-base-100 p-5 items-center border border-gray-400">
+        <GraphsCaro />
+        <div className="flex w-full justify-center gap-2 py-2">
+          <a href="#item1" className="btn btn-outline btn-primary btn-circle">1</a>
+          <a href="#item2" className="btn btn-outline btn-primary btn-circle">2</a>
+          <a href="#item3" className="btn btn-outline btn-primary btn-circle">3</a>
+          <a href="#item4" className="btn btn-outline btn-primary btn-circle">4</a>
         </div>
-
-        <div className="col-span-2 row-span-3 list-row bg-base-100 p-5 rounded-box border border-gray-400">
-          <ul>
-            <li className="text-xl font-bold">Upcoming</li>
-          </ul>
-        </div>
+        <div className="btn btn-outline btn-primary">Customize</div>
       </div>
 
+      <div className="col-span-2 row-span-3 list-row bg-base-100 p-5 rounded-box border border-gray-400">
+        <ul>
+          <li className="text-xl font-bold">Upcoming</li>
+        </ul>
+      </div>
     </div>
   );
 }

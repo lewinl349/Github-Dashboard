@@ -1,4 +1,4 @@
-import { requestRawUser, requestRawRepos } from './githubhelper';
+import { requestRawUser, requestRawRepos } from './githubHelper';
 import type { Repo, User } from './types';
 
 // Parse basic information for the user

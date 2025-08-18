@@ -136,3 +136,4 @@ dist
 .pnp.*
 
 server/*.env
+main.db
