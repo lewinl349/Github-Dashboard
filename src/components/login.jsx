@@ -75,14 +75,14 @@ export function LoginPage() {
 
             </fieldset>
             <div className="divider lg:divider-horizontal"></div>
-            <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-xs border p-4">
+            <fieldset className="fieldset bg-base-100 border-base-300 rounded-box min-w-0 w-xs border p-4">
                 <legend className="fieldset-legend">Unofficial Dashboard for Github</legend>
-                <label className="label text-sm text-pretty">
+                <label className="label text-sm text-balance">
                     If you want to include private repos,
                     add read scope for private repositories as well. Instructions are in the README.md!
                 </label>
 
-                <button onClick={() => tokenReq.mutate({ method: "Token" })} disabled={!hasGithubToken} className="btn btn-neutral mt-4">Login</button>
+                <button onClick={() => tokenReq.mutate({ method: "Token" })} disabled={!hasGithubToken} className="cursor-pointer font-medium rounded-lg text-sm mt-2 px-5 py-2.5 text-white rounded-box bg-base-300 hover:bg-base-200">Login</button>
             </fieldset>
         </div>
     )

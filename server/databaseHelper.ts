@@ -47,6 +47,12 @@ async function initTables() {
     await exec(db, reposTable);
 }
 
+/**
+ * Add a repo entry
+ * 
+ * @param repo_name
+ * @param repo_owner - username of who owns the repo 
+ */
 export async function addRepo(repo_name: string, repo_owner: string) {
     const sql: string = "INSERT INTO OR IGNORE repos(name, owner) VALUES(?, ?)";
 
@@ -73,7 +79,25 @@ export async function addTODOEntry(repo_name: string, repo_owner: string, descri
     await run(db, sql, [repo_name, repo_owner, description, dueDate, label, order]);
 }
 
+/**
+ * Edit a TODO entry in the database
+ * 
+ * @param {number} id - The id of the TODO entry
+ * @param {string} description - The description of the TODO task
+ * @param {string} dueDate - When is the task due (YYYY-MM-DD)
+ * @param {string} label - What kind of task is it?
+ * @param {number} order - The order of the item to be displayed
+ */
+export async function editTODOEntry(id: number, description: string, dueDate: string, label: string, order: number): Promise<void> {
 
+}
+
+/**
+ * Get all TODO entries from a repository
+ * 
+ * @param {string} repo_name
+ * @param {string} repo_owner - username of who owns the repo
+ */
 export async function getTODOEntries(repo_name: string, repo_owner: string): Promise<TODOEntry[]> {
     const sql: string = "SELECT * FROM todo WHERE repo_name = ? AND repo_owner = ?";
     const data: any[] = await fetchAll(db, sql, [repo_name, repo_owner]);
@@ -94,7 +118,9 @@ export async function getTODOEntries(repo_name: string, repo_owner: string): Pro
  * @example deleteTODOEntry(5);
  */
 export async function deleteTODOEntry(id: number): Promise<void> {
+    const sql: string = `DELETE FROM todo WHERE id = ?`;
 
+    await run(db, sql, [id]);
 }
 
 await initTables();

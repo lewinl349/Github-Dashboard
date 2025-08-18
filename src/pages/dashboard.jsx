@@ -122,28 +122,24 @@ function GraphsCaro() {
 
 export default function Dashboard() {
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="grid grid-flow-col md:grid-flow-row gap-5 m-5">
-        <WelcomeBanner />
-        <div className="row-start-3 col-span-3 row-span-3 flex flex-col bg-base-100 p-5 items-center border border-gray-400">
-          <GraphsCaro />
-          <div className="flex w-full justify-center gap-2 py-2">
-            <a href="#item1" className="btn btn-circle">1</a>
-            <a href="#item2" className="btn btn-circle">2</a>
-            <a href="#item3" className="btn btn-circle">3</a>
-            <a href="#item4" className="btn btn-circle">4</a>
-          </div>
-          <div className="btn rounded-box">Customize</div>
+    <div className="grid grid-flow-col md:grid-flow-row gap-5 m-5">
+      <WelcomeBanner />
+      <div className="row-start-3 col-span-3 row-span-3 flex flex-col bg-base-100 p-5 items-center border border-gray-400">
+        <GraphsCaro />
+        <div className="flex w-full justify-center gap-2 py-2">
+          <a href="#item1" className="btn btn-outline btn-primary btn-circle">1</a>
+          <a href="#item2" className="btn btn-outline btn-primary btn-circle">2</a>
+          <a href="#item3" className="btn btn-outline btn-primary btn-circle">3</a>
+          <a href="#item4" className="btn btn-outline btn-primary btn-circle">4</a>
         </div>
-
-        <div className="col-span-2 row-span-3 list-row bg-base-100 p-5 rounded-box border border-gray-400">
-          <ul>
-            <li className="text-xl font-bold">Upcoming</li>
-          </ul>
-        </div>
+        <div className="btn btn-outline btn-primary">Customize</div>
       </div>
 
+      <div className="col-span-2 row-span-3 list-row bg-base-100 p-5 rounded-box border border-gray-400">
+        <ul>
+          <li className="text-xl font-bold">Upcoming</li>
+        </ul>
+      </div>
     </div>
   );
 }

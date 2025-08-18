@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { ReposPage, DashboardPage, AssistantPage, NoPage } from './pages';
+import { ReposPage, EditRepoPage, DashboardPage, AssistantPage, NoPage } from './pages';
 import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider, } from '@tanstack/react-query'
 import { LoginPage } from './components/login';
@@ -13,8 +13,11 @@ function Main() {
       <BrowserRouter>
         <Routes>
           <Route index element={<DashboardPage />} />
-          <Route path="/repos" element={<ReposPage />} />
-          <Route path="/assistant" element={<AssistantPage />} />
+          <Route path="repos">
+              <Route index element={<ReposPage />} />
+              <Route path="edit/:owner/r/:name" element={<EditRepoPage />} />
+          </Route>
+          <Route path="assistant" element={<AssistantPage />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>
