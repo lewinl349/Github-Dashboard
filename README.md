@@ -14,8 +14,8 @@ An unofficial webapp for Github with an AI assistant, dashboard summary, and loc
 - (Languages: Javascript, Typescript)
 
 ## Features 
-- Summary of languages used and other profile stats
-- Add local git repositories
+- Visualizations of languages used and other profile stats
+- Summary of upcoming tasks
 - For each repo: TODO list, notes, custom icon
 - AI Assistant to help with commits
 
