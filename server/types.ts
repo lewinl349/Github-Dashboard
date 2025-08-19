@@ -21,6 +21,7 @@ export interface TODOEntry {
     id: number,
     desc: string,
     due_date: string,
+    completed: number,
     label: string,
     order: number,
     repo_name: string,

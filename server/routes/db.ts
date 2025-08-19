@@ -1,5 +1,5 @@
 import express from "express";
-import { addRepo, addTODOEntry, getTODOEntries, deleteTODOEntry } from '../databaseHelper';
+import { addTODOEntry, getTODOEntries, deleteTODOEntry } from '../databaseHelper';
 import type { TODOEntry, NoteEntry } from '../types';
 
 export var router = express.Router();
@@ -23,7 +23,7 @@ router.post('/TODO/new', async (req, res) => {
     try {
         const request = req.body;
 
-        
+        await addTODOEntry(request.name, request.owner, request.desc, request.due_date, request.label, request.order);
 
     } catch (error) {
         console.error(error);

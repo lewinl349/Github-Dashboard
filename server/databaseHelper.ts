@@ -4,9 +4,8 @@ import type { TODOEntry, NoteEntry } from './types';
 const filename: string = "main.db";
 // Default option creates new file if it doesn't exist
 const db: Database = new sqlite3.Database(filename);
-const todoTable: string = "CREATE TABLE IF NOT EXISTS todo (id INTEGER PRIMARY KEY AUTOINCREMENT, repo_name TEXT NOT NULL, repo_owner TEXT NOT NULL, description TEXT, due_date TEXT, label TEXT, list_order INTEGER, FOREIGN KEY (repo_name) REFERENCES repos (name), FOREIGN KEY (repo_owner) REFERENCES repos (owner) );";
+const todoTable: string = "CREATE TABLE IF NOT EXISTS todo (id INTEGER PRIMARY KEY AUTOINCREMENT, repo_name TEXT NOT NULL, repo_owner TEXT NOT NULL, description TEXT, due_date TEXT, completed INTEGER, label TEXT, list_order INTEGER);";
 const notesTable: string = "CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, description TEXT, list_order INTEGER);";
-const reposTable: string = "CREATE TABLE IF NOT EXISTS repos (name TEXT, owner TEXT, PRIMARY KEY(name, owner));";
 
 // Run a SQL command
 const exec = async (db: Database, sql: string) => {
@@ -44,19 +43,6 @@ const fetchAll = async (db: Database, sql: string, params: any[]): Promise<any[]
 async function initTables() {
     await exec(db, todoTable);
     await exec(db, notesTable);
-    await exec(db, reposTable);
-}
-
-/**
- * Add a repo entry
- * 
- * @param repo_name
- * @param repo_owner - username of who owns the repo 
- */
-export async function addRepo(repo_name: string, repo_owner: string) {
-    const sql: string = "INSERT INTO OR IGNORE repos(name, owner) VALUES(?, ?)";
-
-    await run(db, sql, [repo_name, repo_owner]);
 }
 
 /**
@@ -74,9 +60,10 @@ export async function addRepo(repo_name: string, repo_owner: string) {
  * addTODOEntry("Add loading screen animation", "2025-06-10", "TODO", 2);
  */
 export async function addTODOEntry(repo_name: string, repo_owner: string, description: string, dueDate: string, label: string, order: number): Promise<void> {
-    const sql: string = "INSERT INTO todo(repo_name, repo_owner, description, due_date, label, list_order) VALUES(?, ?, ?, ?, ?, ?)"
+    const sql: string = "INSERT INTO todo(repo_name, repo_owner, description, due_date, completed, label, list_order) VALUES(?, ?, ?, ?, ?, ?, ?)"
 
-    await run(db, sql, [repo_name, repo_owner, description, dueDate, label, order]);
+    // New tasks should be uncompleted (0 is false)
+    await run(db, sql, [repo_name, repo_owner, description, dueDate, 0, label, order]);
 }
 
 /**
@@ -89,6 +76,10 @@ export async function addTODOEntry(repo_name: string, repo_owner: string, descri
  * @param {number} order - The order of the item to be displayed
  */
 export async function editTODOEntry(id: number, description: string, dueDate: string, label: string, order: number): Promise<void> {
+
+}
+
+export async function completeTODO(id: number): Promise<void> {
 
 }
 
@@ -105,7 +96,7 @@ export async function getTODOEntries(repo_name: string, repo_owner: string): Pro
     var output: TODOEntry[] = [];
 
     for (let entry of data) {
-        output.push({id: entry.id, repo_name: entry.repo_name, repo_owner: entry.repo_owner, desc: entry.description, due_date: entry.due_date, label: entry.label, order: entry.list_order})
+        output.push({id: entry.id, repo_name: entry.repo_name, repo_owner: entry.repo_owner, desc: entry.description, due_date: entry.due_date, completed: entry.completed,label: entry.label, order: entry.list_order})
     }
     return output;
 }
@@ -127,4 +118,6 @@ await initTables();
 // const x = await fetchAll(db, "SELECT name FROM sqlite_master WHERE type = \"table\"", []);
 // console.log(x);
 
-// console.log(await getTODOEntries("Github-Dashboard", "lewinl349"));
+//console.log(await fetchAll(db, "SELECT * FROM todo", []));
+
+//console.log(await getTODOEntries("Github-Dashboard", "lewinl349"));

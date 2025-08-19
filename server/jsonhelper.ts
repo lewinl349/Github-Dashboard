@@ -38,6 +38,7 @@ export async function parseAllRepos(user_obj: User): Promise<Repo[]> {
             newRepo.langs[lang.node.name] = lang.size;
         }
 
+        // Add to database
         repos.push(newRepo);
 
         user_obj.num_of_stars += entries[i].stargazerCount;                

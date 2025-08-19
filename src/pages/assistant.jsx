@@ -1,5 +1,4 @@
 import '../app.css'
-import Sidebar from '../components/sidebar.jsx';
 import { useEffect, useState } from 'react';
 
 // ================= Layout =================

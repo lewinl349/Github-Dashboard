@@ -1,11 +1,16 @@
+import 'react-calendar/dist/Calendar.css';
 import '../app.css';
 import { useParams } from "react-router-dom";
 import { CgTrash, CgArrowsExpandRight, CgLink } from 'react-icons/cg';
 import { Outlet, Link } from "react-router-dom";
+import { useState } from 'react';
 import { IconContext } from "react-icons";
 import { customUseQuery } from '../hooks/queryHelper.jsx';
+import axios from 'axios';
+import { useMutation } from '@tanstack/react-query';
+import Calendar from 'react-calendar';
 
-function Checklist({ name, data, hasCheckbox, hasEditing }) {
+function Checklist({ name, data, isTODO, hasEditing, openDialog }) {
   return (
     <IconContext.Provider value={{ className: "h-5 w-5" }}>
       <ul className="list bg-base-100 rounded-box w-[25vw]">
@@ -14,7 +19,7 @@ function Checklist({ name, data, hasCheckbox, hasEditing }) {
             {name}
           </div>
           {hasEditing ? (
-            <button className="btn btn-sm btn-ghost">
+            <button onClick={() => openDialog("", "", new Date())} className="btn btn-sm btn-outline btn-primary">
               + New
             </button>) :
             (<div></div>)
@@ -22,16 +27,22 @@ function Checklist({ name, data, hasCheckbox, hasEditing }) {
         </li>
         {data instanceof Array && data.length > 0 ? data.map((item) => (
           <li key={item.id} className="list-row hover:bg-base-300 group">
-            {hasCheckbox ? (
+            {isTODO ? (
               <label>
-                <input type="checkbox" className="checkbox" />
+                <input type="checkbox" className="checkbox checkbox-primary" />
               </label>) :
               (<div></div>)
             }
             <div>
               <div>{item.desc}</div>
-              <div className="text-xs uppercase font-semibold opacity-60">{item.due_date || "Item " + item.order}</div>
-              <div></div>
+              {isTODO ? (
+                <div className="flex justify-between">
+                  <div className="text-xs uppercase font-semibold opacity-60">{"Due: " + item.due_date}</div>
+                  <div className="badge badge-outline badge-primary badge-xs">{item.label}</div>
+                </div>
+              ) :
+                (<div></div>)
+              }
             </div>
             {hasEditing ? (
               <button className="btn btn-square bg-red-700 hidden group-hover:inline-flex">
@@ -52,12 +63,79 @@ export function TODOWindow() {
   let { owner: ownerName, name: repoName } = useParams();
   const { isPending, error, data: repoData } = customUseQuery(`${ownerName}${repoName}`, `/db/TODO/${ownerName}/${repoName}`, "getTODO");
 
+  const [desc, setDesc] = useState("");
+  const [label, setLabel] = useState("");
+  const [date, setDate] = useState(new Date());
+
+  function onDescChange(nextValue) {
+    setDesc(nextValue.target.value);
+  }
+
+  function onLabelChange(nextValue) {
+    setLabel(nextValue.target.value);
+  }
+
+  function onDateChange(nextValue) {
+    setDate(nextValue);
+  }
+
+  function openTODODialog(nextDesc, nextLabel, nextDate) {
+    setDesc(nextDesc);
+    setLabel(nextLabel);
+    setDate(nextDate);
+
+    document.getElementById('TODO_modal').showModal();
+  }
+
+  function handleSaveTODO() {
+    TODOReq.mutate({name: repoName, owner: ownerName, 
+              desc: desc, due_date: date.toJSON(), label: label, order: repoData.length > 0 ? (repoData[0].order + 1) : 0});
+  }
+
+  const TODOReq = useMutation({
+        mutationFn: (data) => {
+            return axios.post('http://localhost:3000/db/TODO/new', data)
+        },
+  })
+
   if (isPending) return (<span className="loading loading-spinner text-primary"></span>)
 
   if (error) return 'An error has occurred: ' + error.message
 
+  repoData.sort((a,b) => b.order - a.order);
+
   return (
     <div className="max-w-6xl bg-base-100 m-5 p-5 border border-gray-400">
+      <dialog id="TODO_modal" className="modal">
+        <div className="modal-box bg-base-200 border-base-300 rounded-box border w-auto">
+          <h3 className="font-bold text-lg">Edit TODO Entry</h3>
+
+          <fieldset className="fieldset bg-base-200 w-xs p-4">
+            <label className="label"> Description </label>
+            <input type="desc" className="input" placeholder="Your task here!" value={desc} onChange={onDescChange}/>
+
+            <label className="label"> Label </label>
+            <input type="label" className="input" placeholder="What Category?" value={label} onChange={onLabelChange}/>
+
+            <label className="label"> Due Date </label>
+            <div className="text-black">
+              <Calendar onChange={onDateChange} value={date} />
+            </div>
+
+            <button className="btn btn-outline btn-primary mt-4"
+              onClick={() => handleSaveTODO()}>Save</button>
+          </fieldset>
+
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn btn-sm btn-circle btn-ghost btn-primary absolute right-2 top-2">✕</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      
+
       <form className="grid gap-5">
         <h3 className="font-bold text-lg">Summary</h3>
         <Link to={`/repos`} className="btn btn-outline btn-primary col-start-7">
@@ -69,11 +147,11 @@ export function TODOWindow() {
       <p className="pt-1 pb-4">{ownerName}</p>
       {isPending || error ? (<div>An error has occurred</div>) :
         (<div className="flex flex-col lg:flex-row w-full justify-center">
-          <Checklist name="To-Do" hasCheckbox={true} hasEditing={true} data={repoData} />
+          <Checklist name="To-Do" isTODO={true} hasEditing={true} data={repoData} openDialog={openTODODialog} />
+          {/* <div className="divider lg:divider-horizontal"></div>
+          <Checklist name="Notes" isTODO={false} hasEditing={true} data={repoData} /> */}
           <div className="divider lg:divider-horizontal"></div>
-          <Checklist name="Notes" hasCheckbox={false} hasEditing={true} data={repoData} />
-          <div className="divider lg:divider-horizontal"></div>
-          <Checklist name="Open Issues/PR" hasCheckbox={false} hasEditing={false} data={repoData} />
+          <Checklist name="Open Issues/PR" isTODO={false} hasEditing={false} data={repoData} />
         </div>)
       }
     </div>

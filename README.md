@@ -10,7 +10,7 @@ An unofficial webapp for Github with an AI assistant, dashboard summary, and loc
 - TailwindCSS (Plugin: DaisyUI)
 - SQLite3
 - GraphQL
-- (Packages: ChartJS, Octokit, Dotenv, React Query, React Icons)
+- (Packages: ChartJS, Octokit, Dotenv, React Query + Axios, React Icons, React Calendar)
 - (Languages: Javascript, Typescript)
 
 ## Features 

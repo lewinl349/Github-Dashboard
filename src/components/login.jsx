@@ -1,36 +1,28 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query';
 import { customUseQuery } from '../hooks/queryHelper.jsx';
 import { useReady } from "../scripts/loginContextHelper.jsx";
+import axios from 'axios';
 
 export function LoginPage() {
     const { setReady } = useReady();
 
     const { isPending: pendingGT, error: errorGT, data: hasGithubToken } = customUseQuery("N/A", "/token/github", "gitToken");
     const { isPending: pendingAIT, error: errorAIT, data: hasOpenAIToken } = customUseQuery("N/A", "/token/openai", "openAIToken");
-    
+
     // Might be needed to send data when signing in
     const tokenReq = useMutation({
-        mutationFn: async (data) => {
-            const response = await fetch('http://localhost:3000/api/authenticate/user', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: { 'Content-Type': 'application/json' },
-            })
-
-            // Wait for the POST request to return if it is complete
-            const ready = await response.json();
+        mutationFn: (data) => {
+            return axios.post('http://localhost:3000/api/authenticate/user', data)
         },
+
         onSuccess: () => {
             setReady(true);
-            // Invalidate and refetch
-            // aka refetch all data
-            queryClient.invalidateQueries({ queryKey: ['reposList', 'langData', 'userdata'] })
-        },
+        }
     })
 
     if (pendingGT) return (<span className="loading loading-spinner text-primary"></span>);
     if (errorGT) return 'An error has occurred: ' + errorGT.message;
-    
+
     if (pendingAIT) return (<span className="loading loading-spinner text-primary"></span>);
     if (errorAIT) return 'An error has occurred: ' + errorAIT.message;
 
@@ -59,7 +51,7 @@ export function LoginPage() {
                             (<span className="badge badge-success">Verified</span>) :
                             (<span className="badge badge-warning">Invalid</span>)
                     }
-                    
+
                 </label>
                 <label className="label text-sm flex justify-between">
                     <p>(Optional) OpenAI Token</p>

@@ -1,5 +1,4 @@
 import '../app.css';
-import Sidebar from '../components/sidebar.jsx';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie, Bar, Doughnut } from "react-chartjs-2";
 import { customUseQuery } from '../hooks/queryHelper.jsx';
