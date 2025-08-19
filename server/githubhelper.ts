@@ -111,5 +111,5 @@ async function checkRateLimit(): Promise<void> {
   ))
 }
 
-// getToken();
-// checkRateLimit();
+getToken();
+checkRateLimit();
