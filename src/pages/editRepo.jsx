@@ -1,7 +1,7 @@
 import 'react-calendar/dist/Calendar.css';
 import '../app.css';
 import { useParams } from "react-router-dom";
-import { CgTrash, CgArrowsExpandRight, CgLink } from 'react-icons/cg';
+import { CgTrash, CgPen, CgLink } from 'react-icons/cg';
 import { Outlet, Link } from "react-router-dom";
 import { useState } from 'react';
 import { IconContext } from "react-icons";
@@ -44,9 +44,10 @@ function DeleteItemModal({ id, deleteFunc }) {
   )
 }
 
-function Checklist({ name, data, isTODO, hasEditing, openDialog }) {
+function Checklist({ name, data, isTODO, hasEditing, openDialog, setIsEditing, setCurrID }) {
   // Keep track of which entry had their delete button clicked
   const [deleteID, setDeleteID] = useState(-1);
+  const [checkboxDelay, setCheckboxDelay] = useState(false);
 
   function handleDeleteButton(id) {
     setDeleteID(id);
@@ -56,22 +57,42 @@ function Checklist({ name, data, isTODO, hasEditing, openDialog }) {
   function confirmDelete() {
     var itemIndex = data.map(entry => entry.id).indexOf(deleteID);
 
-    console.log(data[itemIndex]);
-
     data.splice(itemIndex, 1);
     setDeleteID(-1);
+  }
+
+  function handleEditing(isEditing, desc, label, dueDate, id) {
+    setIsEditing(isEditing);
+    setCurrID(id);
+
+    openDialog(desc, label, dueDate);
+  }
+
+  const completeReq = useMutation({
+      mutationFn: (data) => {
+        return axios.post('http://localhost:3000/db/TODO/complete', data)
+      },
+      onSuccess: () => {
+        setCheckboxDelay(false);
+        return
+      }
+    })
+
+  function handleComplete(e) {
+    setCheckboxDelay(true);
+    completeReq.mutate({ id: e.target.value, complete: e.target.checked ? 1 : 0 });
   }
 
   return (
     <IconContext.Provider value={{ className: "h-5 w-5" }}>
       <DeleteItemModal id={deleteID} deleteFunc={confirmDelete} />
-      <ul className="list bg-base-100 rounded-box w-[25vw]">
+      <ul className="list bg-base-100 rounded-box min-w-md w-[35vw]">
         <li className="flex justify-between align-center">
           <div className="text-lg opacity-60 tracking-wide">
             {name}
           </div>
           {hasEditing && (
-            <button onClick={() => openDialog("", "", new Date())} className="btn btn-sm btn-outline btn-primary">
+            <button onClick={() => handleEditing(false, "", "", new Date(), -1)} className="btn btn-sm btn-outline btn-primary">
               + New
             </button>)
           }
@@ -80,7 +101,7 @@ function Checklist({ name, data, isTODO, hasEditing, openDialog }) {
           <li key={item.id + item.order} className="list-row hover:bg-base-300 group">
             {isTODO ? (
               <label>
-                <input type="checkbox" className="checkbox checkbox-primary" />
+                <input type="checkbox" className="checkbox checkbox-primary disabled:opacity-100 disabled:cursor-wait" disabled={checkboxDelay} defaultChecked={item.completed == 1} value={item.id} onChange={handleComplete}/>
               </label>) :
               (<div></div>)
             }
@@ -95,9 +116,14 @@ function Checklist({ name, data, isTODO, hasEditing, openDialog }) {
               }
             </div>
             {hasEditing ? (
-              <button className="btn btn-square bg-red-700 hidden group-hover:inline-flex" disabled={item.id == -1} onClick={() => handleDeleteButton(item.id)}>
-                <CgTrash />
-              </button>) :
+              <div>
+                <button className="btn btn-square bg-primary hidden group-hover:inline-flex mr-4" disabled={item.id == -1} onClick={() => handleEditing(true, item.desc, item.label, new Date(item.due_date), item.id)}>
+                  <CgPen />
+                </button>
+                <button className="btn btn-square bg-red-700 hidden group-hover:inline-flex" disabled={item.id == -1} onClick={() => handleDeleteButton(item.id)}>
+                  <CgTrash />
+                </button>
+              </div>) :
               (<button className="btn btn-square bg-primary hidden group-hover:inline-flex">
                 <CgLink />
               </button>)
@@ -111,13 +137,22 @@ function Checklist({ name, data, isTODO, hasEditing, openDialog }) {
 
 export function TODOWindow() {
   let { owner: ownerName, name: repoName } = useParams();
+  const queryClient = useQueryClient();
+
+  queryClient.invalidateQueries({ queryKey: ['getTODO', `${ownerName}${repoName}`] });
   const { isPending, error, data: repoData } = customUseQuery(`${ownerName}${repoName}`, `/db/TODO/${ownerName}/${repoName}`, "getTODO");
 
-  const queryClient = useQueryClient();
+  /**
+   * State variables for adding TODO entries
+   */
 
   const [desc, setDesc] = useState("");
   const [label, setLabel] = useState("");
   const [date, setDate] = useState(new Date());
+
+  // For editing
+  const [currID, setCurrID] = useState(-1);
+  const [isEditing, setIsEditing] = useState(false);
 
   function onDescChange(nextValue) {
     setDesc(nextValue.target.value);
@@ -139,6 +174,18 @@ export function TODOWindow() {
     document.getElementById('TODO_modal').showModal();
   }
 
+  function handleTODO() {
+    if (isEditing) {
+      editTODO(currID);
+    } else {
+      addTODO();
+    }
+  }
+
+  /**
+   * Create new TODO Entry
+   */
+
   const TODOReq = useMutation({
     mutationFn: (data) => {
       return axios.post('http://localhost:3000/db/TODO/new', data)
@@ -149,7 +196,7 @@ export function TODOWindow() {
     }
   })
 
-  function handleSaveTODO() {
+  function addTODO() {
     const newEntry = {
       id: -1, name: repoName, owner: ownerName, desc: desc, due_date: date.toJSON(),
       label: label, order: repoData.length > 0 ? (repoData[0].order + 1) : 0
@@ -160,8 +207,25 @@ export function TODOWindow() {
     repoData.sort((a, b) => b.order - a.order);
   }
 
-  function handleEditTODO() {
-    
+  /**
+   * Edit a TODO Entry
+   */
+  const editTODOReq = useMutation({
+    mutationFn: (data) => {
+      return axios.post('http://localhost:3000/db/TODO/edit', data)
+    },
+    onSuccess: () => {
+      document.getElementById('TODO_modal').close();
+      queryClient.invalidateQueries({ queryKey: ['getTODO', `${ownerName}${repoName}`] });
+    }
+  })
+
+  function editTODO(id) {
+    const entry = { id: id, desc: desc, due_date: date.toJSON(), label: label };
+
+    editTODOReq.mutate(entry);
+
+    // TODO: Add optimistic update
   }
 
   if (isPending) return (<span className="loading loading-spinner text-primary"></span>)
@@ -171,17 +235,17 @@ export function TODOWindow() {
   repoData.sort((a, b) => b.order - a.order);
 
   return (
-    <div className="max-w-6xl bg-base-100 m-5 p-5 border border-gray-400">
+    <div className="max-w-5xl w-full bg-base-100 m-5 p-5 border border-gray-400">
       <dialog id="TODO_modal" className="modal">
         <div className="modal-box bg-base-200 border-base-300 rounded-box border w-auto">
-          <h3 className="font-bold text-lg">Edit TODO Entry</h3>
+          <h3 className="font-bold text-lg">{isEditing ? "Edit TODO Entry" : "Adding new TODO"}</h3>
 
           <fieldset className="fieldset bg-base-200 w-xs p-4">
             <label className="label"> Description </label>
             <input type="desc" className="input" placeholder="Your task here!" value={desc} onChange={onDescChange} />
 
             <label className="label"> Label </label>
-            <input type="label" className="input" placeholder="What Category?" value={label} onChange={onLabelChange} />
+            <input type="label" className="input" placeholder="What Category?" maxLength="10" value={label} onChange={onLabelChange} />
 
             <label className="label"> Due Date </label>
             <div className="text-black">
@@ -189,7 +253,8 @@ export function TODOWindow() {
             </div>
 
             <button className="btn btn-outline btn-primary mt-4"
-              onClick={() => handleSaveTODO()}>{TODOReq.isPending ? ("Saving...") : ("Save")}</button>
+              onClick={() => handleTODO()}>
+              {TODOReq.isPending ? ("Saving...") : ("Save")}</button>
             {TODOReq.isError ? (
               <p className="text-red">Request failed... Try again.</p>
             ) : (<div></div>)}
@@ -217,9 +282,9 @@ export function TODOWindow() {
       <p className="pt-1 pb-4">{ownerName}</p>
       {isPending || error ? (<div>An error has occurred</div>) :
         (<div className="flex flex-col lg:flex-row w-full justify-center">
-          <Checklist name="To-Do" isTODO={true} hasEditing={true} data={repoData} openDialog={openTODODialog} />
+          <Checklist name="To-Do" isTODO={true} setCurrID={setCurrID} setIsEditing={setIsEditing} hasEditing={true} data={repoData} openDialog={openTODODialog} />
           {/* <div className="divider lg:divider-horizontal"></div>
-          <Checklist name="Notes" isTODO={false} hasEditing={true} data={repoData} /> */}
+          <Checklist name="Notes" isTODO={false} setCurrID={setCurrID} setIsEditing={setIsEditing} hasEditing={true} data={repoData} /> */}
           <div className="divider lg:divider-horizontal"></div>
           <Checklist name="Open Issues/PR" isTODO={false} hasEditing={false} data={repoData} />
         </div>)

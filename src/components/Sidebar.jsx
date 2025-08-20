@@ -18,7 +18,7 @@ export default function Sidebar() {
 
   return (
     <IconContext.Provider value={{ className: "h-5 w-5" }}>
-      <div className="drawer lg:drawer-open w-[12vw]">
+      <div className="drawer lg:drawer-open m-w-md w-[12vw]">
         <input id="sidebar" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col items-center justify-center">
           <label htmlFor="sidebar" className="btn btn-primary fixed left-0 bottom-0 drawer-button lg:hidden">

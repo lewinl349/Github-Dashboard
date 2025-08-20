@@ -73,14 +73,25 @@ export async function addTODOEntry(repo_name: string, repo_owner: string, descri
  * @param {string} description - The description of the TODO task
  * @param {string} dueDate - When is the task due (YYYY-MM-DD)
  * @param {string} label - What kind of task is it?
- * @param {number} order - The order of the item to be displayed
  */
-export async function editTODOEntry(id: number, description: string, dueDate: string, label: string, order: number): Promise<void> {
+export async function editTODOEntry(id: number, description: string, dueDate: string, label: string): Promise<void> {
+    const sql = `UPDATE todo SET description = ?, due_date = ?, label = ? WHERE id = ?`;
 
+    await run(db, sql, [description, dueDate, label, id]);
+
+    console.log([description, dueDate, label, id]);
 }
 
-export async function completeTODO(id: number): Promise<void> {
+/**
+ * Edit a TODO entry in the database
+ * 
+ * @param {number} id - The id of the TODO entry
+ * @param {number} completed - If it is completed or not (0 false, 1 ture)
+ */
+export async function completeTODO(id: number, completed: number): Promise<void> {
+    const sql = `UPDATE todo SET completed = ? WHERE id = ?`;
 
+    await run(db, sql, [completed, id]);
 }
 
 /**
