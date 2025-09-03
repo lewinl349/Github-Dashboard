@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from 'cors';
 import { router as db } from './routes/db';
-import { parseAllRepos, calculateAvgLang, parseUserData } from './jsonHelper';
+import { parseAllRepos, calculateAvgLang, parseUserData, parseIssues } from './jsonHelper';
 import { getToken } from './githubHelper';
 import type { Repo, User } from './types';
 
@@ -63,7 +63,23 @@ app.get('/api/user', async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    res.status(500)
+    res.status(500);
+    res.send('Failed to fetch user data');
+  }
+})
+
+app.get('/api/issues/:owner/:name', async (req, res) => {
+  try {
+    const data = req.params;
+
+    const issues = await parseIssues(data.owner, data.name);
+    
+    console.log("Grabbed issues!");
+    res.json(issues)
+
+  } catch (error) {
+    console.error(error);
+    res.status(500);
     res.send('Failed to fetch user data');
   }
 })

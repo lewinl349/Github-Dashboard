@@ -22,7 +22,7 @@ function RepoTable() {
           <tr className="border-gray-400 border-collapse">
             <th className="w-1/32">
               <label>
-                <input type="checkbox" className="checkbox" />
+                <input type="checkbox" className="checkbox checkbox-primary" />
               </label>
             </th>
             <th className="w-1/8">Name</th>
@@ -36,7 +36,7 @@ function RepoTable() {
             <tr key={repo.owner + "/" + repo.name} className="hover:bg-base-300 border border-gray-400 border-collapse">
               <td>
                 <label>
-                  <input type="checkbox" className="checkbox" />
+                  <input type="checkbox" className="checkbox checkbox-primary" />
                 </label>
               </td>
               <td>

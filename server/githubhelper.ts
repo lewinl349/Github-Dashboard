@@ -6,7 +6,7 @@ var octokit: Octokit = null;
 /**
  * Instantiate octokit object with token
  */
-export async function getToken(): Promise<boolean>{
+export async function getToken(): Promise<boolean> {
   dotenv.config({ path: 'server/keys.env' });
 
   octokit = new Octokit({
@@ -48,6 +48,52 @@ export async function requestRawUser(): Promise<any> {
   );
 
   return response.viewer;
+}
+
+/**
+ * Query a repository's issues and pull requests (Counts as issues)
+ * 
+ * @param owner - Owner of repo
+ * @param name - Name of repo
+ * @returns list of issue objects
+ */
+export async function requestRawIssues(owner: string, name: string): Promise<any> {
+  const response = await octokit.graphql(
+    `
+    query($owner: String!, $name: String!) {
+      repository(owner: $owner, name: $name) {
+        issues(first: 50, states: OPEN, orderBy: {direction: DESC, field: UPDATED_AT}) {
+          nodes {
+            number
+            title
+            createdAt
+            url
+            author {
+              login
+            }
+          }
+        }
+        pullRequests(first: 50, states: OPEN, orderBy: {direction: DESC, field: UPDATED_AT}) {
+          nodes {
+            number
+            title
+            createdAt
+            url
+            author {
+              login
+            }
+          }
+        }
+      }
+    }
+    `,
+    {
+      owner: owner,
+      name: name
+    }
+  );
+
+  return response.repository;
 }
 
 /**
@@ -111,5 +157,5 @@ async function checkRateLimit(): Promise<void> {
   ))
 }
 
-// getToken();
-// checkRateLimit();
+getToken();
+checkRateLimit();

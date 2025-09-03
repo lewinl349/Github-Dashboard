@@ -10,7 +10,7 @@ An unofficial webapp for Github with an AI assistant, dashboard summary, and loc
 - TailwindCSS (Plugin: DaisyUI)
 - SQLite3
 - GraphQL
-- (Packages: ChartJS, Octokit, Dotenv, React Query, React Icons)
+- (Packages: ChartJS, Octokit, Dotenv, React Query + Axios, React Icons, React Calendar)
 - (Languages: Javascript, Typescript)
 
 ## Features 
@@ -21,7 +21,7 @@ An unofficial webapp for Github with an AI assistant, dashboard summary, and loc
 
 ## Instructions
 > [!IMPORTANT]
-> If you want to also display private repos, you need a Github API token with private repository read permissions.
+> If you want to also display private repos, you need a Github API token with Read-only access to: Content, Issues, Pull Requests.
 
 1. Clone repo `git clone https://github.com/lewinl349/Github-Dashboard.git`
 2. install required packages `npm install`

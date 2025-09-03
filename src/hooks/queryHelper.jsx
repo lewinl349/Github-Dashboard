@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 // TEMP
 const baseURL = "http://localhost:3000";
 
-export const customUseQuery = (id, path, key) => {
+export const customUseQuery = (id, path, key, staleTime = 0) => {
     return useQuery({
         queryKey: [key, id],
         queryFn: async () => {
@@ -16,5 +16,6 @@ export const customUseQuery = (id, path, key) => {
             return await response.json();
         },
         enabled: !!id,
+        staleTime: staleTime
     })
 }
