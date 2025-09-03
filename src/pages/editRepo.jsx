@@ -69,14 +69,14 @@ function Checklist({ name, data, isTODO, hasEditing, openDialog, setIsEditing, s
   }
 
   const completeReq = useMutation({
-      mutationFn: (data) => {
-        return axios.post('http://localhost:3000/db/TODO/complete', data)
-      },
-      onSuccess: () => {
-        setCheckboxDelay(false);
-        return
-      }
-    })
+    mutationFn: (data) => {
+      return axios.post('http://localhost:3000/db/TODO/complete', data)
+    },
+    onSuccess: () => {
+      setCheckboxDelay(false);
+      return
+    }
+  })
 
   function handleComplete(e) {
     setCheckboxDelay(true);
@@ -98,21 +98,27 @@ function Checklist({ name, data, isTODO, hasEditing, openDialog, setIsEditing, s
           }
         </li>
         {data instanceof Array && data.length > 0 ? data.map((item) => (
-          <li key={item.id + item.order} className="list-row hover:bg-base-300 group">
+          <li key={item.order || item.number} className="list-row hover:bg-base-300 group">
             {isTODO ? (
               <label>
-                <input type="checkbox" className="checkbox checkbox-primary disabled:opacity-100 disabled:cursor-wait" disabled={checkboxDelay} defaultChecked={item.completed == 1} value={item.id} onChange={handleComplete}/>
+                <input type="checkbox" className="checkbox checkbox-primary disabled:opacity-100 disabled:cursor-wait" disabled={checkboxDelay} defaultChecked={item.completed == 1} value={item.id} onChange={handleComplete} />
               </label>) :
               (<div></div>)
             }
             <div>
-              <div>{item.desc}</div>
-              {isTODO && (
-                <div className="flex justify-between">
-                  <div className="text-xs uppercase font-semibold opacity-60">{"Due: " + item.due_date.split('T')[0]}</div>
-                  <div className="badge badge-outline badge-primary badge-xs">{item.label}</div>
+              {isTODO ? (
+                <div>
+                  <div>{item.desc}</div>
+                  <div className="flex justify-between">
+                    <div className="text-xs uppercase font-semibold opacity-60">{"Due: " + item.due_date.split('T')[0]}</div>
+                    <div className="badge badge-outline badge-primary badge-xs">{item.label}</div>
+                  </div>
                 </div>
-              )
+
+              ) : (<div>
+                {`Issue ${item.number}: ${item.title}`}
+                <div className="text-xs uppercase font-semibold opacity-60">{"Created at: " + item.created.split('T')[0]}</div>
+              </div>)
               }
             </div>
             {hasEditing ? (
@@ -124,9 +130,11 @@ function Checklist({ name, data, isTODO, hasEditing, openDialog, setIsEditing, s
                   <CgTrash />
                 </button>
               </div>) :
-              (<button className="btn btn-square bg-primary hidden group-hover:inline-flex">
-                <CgLink />
-              </button>)
+              (<a href={item.url} target="_blank" rel="noopener noreferrer">
+                <button className="btn btn-square bg-primary hidden group-hover:inline-flex">
+                  <CgLink />
+                </button>
+              </a>)
             }
           </li>
         )) : (<li className="list-row hover:bg-base-300 group">No Items...</li>)}
@@ -141,6 +149,7 @@ export function TODOWindow() {
 
   queryClient.invalidateQueries({ queryKey: ['getTODO', `${ownerName}${repoName}`] });
   const { isPending, error, data: repoData } = customUseQuery(`${ownerName}${repoName}`, `/db/TODO/${ownerName}/${repoName}`, "getTODO");
+  const { isPending: issuesPending, error: issuesError, data: issuesData } = customUseQuery(`${ownerName}${repoName}`, `/api/issues/${ownerName}/${repoName}`, "getIssues", 120000)
 
   /**
    * State variables for adding TODO entries
@@ -228,9 +237,9 @@ export function TODOWindow() {
     // TODO: Add optimistic update
   }
 
-  if (isPending) return (<span className="loading loading-spinner text-primary"></span>)
+  if (isPending || issuesPending) return (<span className="loading loading-spinner text-primary"></span>);
 
-  if (error) return 'An error has occurred: ' + error.message
+  if (error || issuesError) return 'An error has occurred: ' + error.message;
 
   repoData.sort((a, b) => b.order - a.order);
 
@@ -286,7 +295,7 @@ export function TODOWindow() {
           {/* <div className="divider lg:divider-horizontal"></div>
           <Checklist name="Notes" isTODO={false} setCurrID={setCurrID} setIsEditing={setIsEditing} hasEditing={true} data={repoData} /> */}
           <div className="divider lg:divider-horizontal"></div>
-          <Checklist name="Open Issues/PR" isTODO={false} hasEditing={false} data={repoData} />
+          <Checklist name="Open Issues/PR" isTODO={false} hasEditing={false} data={issuesData.issues.concat(issuesData.PRs)} />
         </div>)
       }
     </div>

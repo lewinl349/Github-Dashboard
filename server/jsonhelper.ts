@@ -1,5 +1,5 @@
-import { requestRawUser, requestRawRepos } from './githubHelper';
-import type { Repo, User } from './types';
+import { requestRawUser, requestRawRepos, requestRawIssues } from './githubHelper';
+import type { Repo, User, RepoItems } from './types';
 
 // Parse basic information for the user
 export async function parseUserData(): Promise<User> {
@@ -65,4 +65,38 @@ export async function calculateAvgLang(user: string, repos: Repo[]): Promise<Rec
     };
 
     return langs;
+}
+
+// Get all issues and pull requests from a repository
+export async function parseIssues(owner: string, name: string): Promise<RepoItems> {
+    const data = await requestRawIssues(owner, name);
+    const issueData = data.issues.nodes;
+    const PRData = data.pullRequests.nodes;
+    var items = { issues: [], PRs: [] };
+
+    for (var issue of issueData) {
+        var item = {
+            number: issue.number,
+            title: issue.title,
+            created: issue.createdAt,
+            url: issue.url,
+            author: issue.author.login
+        }
+
+        items.issues.push(item);
+    }
+
+    for (var PR of PRData) {
+        var item = {
+            number: PR.number,
+            title: PR.title,
+            created: PR.createdAt,
+            url: PR.url,
+            author: PR.author.login
+        }
+
+        items.PRs.push(item);
+    }
+
+    return items;
 }

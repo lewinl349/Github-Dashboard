@@ -1,9 +1,22 @@
+export interface Issue {
+    number: string,
+    title: string,
+    url: string,
+    created: string,
+    author: string
+}
+
+export interface RepoItems {
+    issues: Issue[], 
+    PRs: Issue[]
+}
+
 export interface Repo {
     name: string,
     desc: string,
     owner: string,
     link: string,
-    langs: Record<string, number>;
+    langs: Record<string, number>
 }
 
 export interface User {
