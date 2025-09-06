@@ -125,6 +125,23 @@ export async function deleteTODOEntry(id: number): Promise<void> {
     await run(db, sql, [id]);
 }
 
+/**
+ * Get all TODO entries due within a week
+ */
+export async function getDueSoonEntries(): Promise<any[]> {
+    var today: Date = new Date();
+    today.setDate(today.getDate() + 7);
+    
+    const todayStr: string = today.toISOString(); 
+
+    const sql: string = "SELECT * FROM todo WHERE datetime(due_date) < datetime(?) ORDER BY datetime(due_date) ASC";
+    const data: any[] = await fetchAll(db, sql, [todayStr]);
+
+    return data;
+}
+
+
+
 await initTables();
 // const x = await fetchAll(db, "SELECT name FROM sqlite_master WHERE type = \"table\"", []);
 // console.log(x);

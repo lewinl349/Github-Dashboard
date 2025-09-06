@@ -7,7 +7,7 @@ export function LoginPage() {
     const { setReady } = useReady();
 
     const { isPending: pendingGT, error: errorGT, data: hasGithubToken } = customUseQuery("N/A", "/token/github", "gitToken");
-    const { isPending: pendingAIT, error: errorAIT, data: hasOpenAIToken } = customUseQuery("N/A", "/token/openai", "openAIToken");
+    const { isPending: pendingAIT, error: errorAIT, data: hasAIToken } = customUseQuery("N/A", "/token/ai", "AIToken");
 
     // Might be needed to send data when signing in
     const tokenReq = useMutation({
@@ -54,9 +54,9 @@ export function LoginPage() {
 
                 </label>
                 <label className="label text-sm flex justify-between">
-                    <p>(Optional) OpenAI Token</p>
+                    <p>(Optional) Gemini API Token</p>
                     {
-                        hasOpenAIToken ?
+                        hasAIToken ?
                             (<span className="badge badge-success">Verified</span>) :
                             (<span className="badge badge-warning">Invalid</span>)
                     }
@@ -71,7 +71,8 @@ export function LoginPage() {
                 <legend className="fieldset-legend">Unofficial Dashboard for Github</legend>
                 <label className="label text-sm text-balance">
                     If you want to include private repos,
-                    add read scope for private repositories as well. Instructions are in the README.md!
+                    add read scope for content, issues, and pull requests. 
+                    Instructions are in the README.md!
                 </label>
 
                 <button onClick={() => tokenReq.mutate({ method: "Token" })} disabled={!hasGithubToken} className="cursor-pointer font-medium rounded-lg text-sm mt-2 px-5 py-2.5 text-white rounded-box bg-base-300 hover:bg-base-200">Login</button>

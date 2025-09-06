@@ -34,24 +34,14 @@ function WelcomeBanner() {
 
   return (
     <IconContext.Provider value={{ className: "h-8 w-8 mr-2" }}>
-      <div className="col-span-5 flex p-5 bg-base-100 border border-gray-400">
+      <div className="col-span-5 flex py-10 bg-base-100 border border-gray-400">
         <img src={data.pfp}
           className="mx-5 w-20 h-20"></img>
         <div>
           <h1 className="text-3xl font-bold">Welcome back, {data.nickname || data.name}!</h1>
-          <p className="py-4">
+          <p className="pt-4">
             Here's your summary for today:
           </p>
-          <div className="flex gap-5">
-            <div>
-              <h1 className="text-m">Due Today</h1>
-              <p className="text-4xl font-bold">4</p>
-            </div>
-            <div>
-              <h1 className="text-m">Open Issues</h1>
-              <p className="text-4xl font-bold">12</p>
-            </div>
-          </div>
         </div>
       </div>
       <StatBox title={"# of Repos"} stat={data.num_of_repos} children={<GoFileCode />} />
@@ -71,7 +61,7 @@ function GraphsCaro() {
   if (error) return 'An error has occurred: ' + error.message;
 
   return (
-    <div className="carousel rounded-box w-150">
+    <div className="carousel rounded-box w-150 my-5">
       <div id="item1" className="carousel-item w-full">
         <div className="card shadow-sm w-150">
           <figure>
@@ -117,6 +107,32 @@ function GraphsCaro() {
   )
 }
 
+function DueSoonPanel() {
+  const { isPending, error, data } = customUseQuery("N/A", "/db/TODO/due_soon", "dueSoon");
+
+  if (isPending) return (<span className="loading loading-spinner text-primary"></span>);
+  if (error) return 'An error has occurred: ' + error.message;
+
+  return (
+    <div className="col-span-2 row-span-3 list-row bg-base-100 p-5 rounded-box border border-gray-400">
+      <div className="text-xl font-bold my-2">Upcoming</div>
+      <ul className="list bg-base-100 rounded-box max-h-[40vh] max-w-[420px] overflow-scroll">
+        {data instanceof Array && data.length > 0 ? data.map((entry) => !entry.completed && (
+          <li key={`${entry.id}`} className="list-row hover:bg-base-300 group flex justify-between">
+            <div>
+              <div className="font-bold">{entry.description}</div>
+              <div>{`${entry.repo_owner}/${entry.repo_name}`}</div>
+              <div className="text-gray-500">{`Due: ${entry.due_date.split('T')[0]}`}</div>
+              <div className="badge badge-outline badge-primary badge-xs">{entry.label}</div>  
+            </div>
+          </li>
+        ))
+        : (<div className="list-row hover:bg-base-300 group">No items...</div>)}
+      </ul>
+    </div>
+  )
+}
+
 // ================= LAYOUT =================
 
 export default function Dashboard() {
@@ -131,14 +147,9 @@ export default function Dashboard() {
           <a href="#item3" className="btn btn-outline btn-primary btn-circle">3</a>
           <a href="#item4" className="btn btn-outline btn-primary btn-circle">4</a>
         </div>
-        <div className="btn btn-outline btn-primary">Customize</div>
+        {/* <div className="btn btn-outline btn-primary">Customize</div> */}
       </div>
-
-      <div className="col-span-2 row-span-3 list-row bg-base-100 p-5 rounded-box border border-gray-400">
-        <ul>
-          <li className="text-xl font-bold">Upcoming</li>
-        </ul>
-      </div>
+      <DueSoonPanel />
     </div>
   );
 }

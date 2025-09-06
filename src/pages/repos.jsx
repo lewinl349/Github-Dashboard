@@ -71,7 +71,7 @@ function RepoTable() {
                 </a>
               </td>
             </tr>
-          )) : (<div>repoData</div>)}
+          )) : (<div></div>)}
         </tbody>
       </table>
       <Outlet />

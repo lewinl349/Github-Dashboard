@@ -44,7 +44,7 @@ function DeleteItemModal({ id, deleteFunc }) {
   )
 }
 
-function Checklist({ name, data, isTODO, hasEditing, openDialog, setIsEditing, setCurrID }) {
+function Checklist({ name, data, openDialog, setIsEditing, setCurrID }) {
   // Keep track of which entry had their delete button clicked
   const [deleteID, setDeleteID] = useState(-1);
   const [checkboxDelay, setCheckboxDelay] = useState(false);
@@ -91,51 +91,55 @@ function Checklist({ name, data, isTODO, hasEditing, openDialog, setIsEditing, s
           <div className="text-lg opacity-60 tracking-wide">
             {name}
           </div>
-          {hasEditing && (
-            <button onClick={() => handleEditing(false, "", "", new Date(), -1)} className="btn btn-sm btn-outline btn-primary">
-              + New
-            </button>)
-          }
+          <button onClick={() => handleEditing(false, "", "", new Date(), -1)} className="btn btn-sm btn-outline btn-primary">
+            + New
+          </button>
         </li>
         {data instanceof Array && data.length > 0 ? data.map((item) => (
-          <li key={item.order || item.number} className="list-row hover:bg-base-300 group">
-            {isTODO ? (
-              <label>
-                <input type="checkbox" className="checkbox checkbox-primary disabled:opacity-100 disabled:cursor-wait" disabled={checkboxDelay} defaultChecked={item.completed == 1} value={item.id} onChange={handleComplete} />
-              </label>) :
-              (<div></div>)
-            }
+          <li key={item.order} className="list-row hover:bg-base-300 group">
+            <label>
+              <input type="checkbox" className="checkbox checkbox-primary disabled:opacity-100 disabled:cursor-wait" disabled={checkboxDelay} defaultChecked={item.completed == 1} value={item.id} onChange={handleComplete} />
+            </label>
             <div>
-              {isTODO ? (
-                <div>
-                  <div>{item.desc}</div>
-                  <div className="flex justify-between">
-                    <div className="text-xs uppercase font-semibold opacity-60">{"Due: " + item.due_date.split('T')[0]}</div>
-                    <div className="badge badge-outline badge-primary badge-xs">{item.label}</div>
-                  </div>
-                </div>
-
-              ) : (<div>
-                {`Issue ${item.number}: ${item.title}`}
-                <div className="text-xs uppercase font-semibold opacity-60">{"Created at: " + item.created.split('T')[0]}</div>
-              </div>)
-              }
+              <div>{item.desc}</div>
+              <div className="flex justify-between">
+                <div className="text-xs uppercase font-semibold opacity-60">{"Due: " + item.due_date.split('T')[0]}</div>
+                <div className="badge badge-outline badge-primary badge-xs">{item.label}</div>
+              </div>
             </div>
-            {hasEditing ? (
-              <div>
-                <button className="btn btn-square bg-primary hidden group-hover:inline-flex mr-4" disabled={item.id == -1} onClick={() => handleEditing(true, item.desc, item.label, new Date(item.due_date), item.id)}>
-                  <CgPen />
-                </button>
-                <button className="btn btn-square bg-red-700 hidden group-hover:inline-flex" disabled={item.id == -1} onClick={() => handleDeleteButton(item.id)}>
-                  <CgTrash />
-                </button>
-              </div>) :
-              (<a href={item.url} target="_blank" rel="noopener noreferrer">
-                <button className="btn btn-square bg-primary hidden group-hover:inline-flex">
-                  <CgLink />
-                </button>
-              </a>)
-            }
+            <button className="btn btn-square bg-primary hidden group-hover:inline-flex" disabled={item.id == -1} onClick={() => handleEditing(true, item.desc, item.label, new Date(item.due_date), item.id)}>
+              <CgPen />
+            </button>
+            <button className="btn btn-square bg-red-700 hidden group-hover:inline-flex" disabled={item.id == -1} onClick={() => handleDeleteButton(item.id)}>
+              <CgTrash />
+            </button>
+          </li>
+        )) : (<li className="list-row hover:bg-base-300 group">No Items...</li>)}
+      </ul>
+    </IconContext.Provider>
+  )
+}
+
+function ShowIssues({ name, data }) {
+  return (
+    <IconContext.Provider value={{ className: "h-5 w-5" }}>
+      <ul className="list bg-base-100 rounded-box min-w-md w-[35vw]">
+        <li className="flex justify-between align-center">
+          <div className="text-lg opacity-60 tracking-wide">
+            {name}
+          </div>
+        </li>
+        {data instanceof Array && data.length > 0 ? data.map((item) => (
+          <li key={item.number} className="list-row hover:bg-base-300 group flex justify-between">
+            <div>
+              {`Issue ${item.number}: ${item.title}`}
+              <div className="text-xs uppercase font-semibold opacity-60">{"Created at: " + item.created.split('T')[0]}</div>
+            </div>
+            <a href={item.url} target="_blank" rel="noopener noreferrer">
+              <button className="btn btn-square bg-primary hidden group-hover:inline-flex">
+                <CgLink />
+              </button>
+            </a>
           </li>
         )) : (<li className="list-row hover:bg-base-300 group">No Items...</li>)}
       </ul>
@@ -291,11 +295,11 @@ export function TODOWindow() {
       <p className="pt-1 pb-4">{ownerName}</p>
       {isPending || error ? (<div>An error has occurred</div>) :
         (<div className="flex flex-col lg:flex-row w-full justify-center">
-          <Checklist name="To-Do" isTODO={true} setCurrID={setCurrID} setIsEditing={setIsEditing} hasEditing={true} data={repoData} openDialog={openTODODialog} />
+          <Checklist name="To-Do" setCurrID={setCurrID} setIsEditing={setIsEditing} data={repoData} openDialog={openTODODialog} />
           {/* <div className="divider lg:divider-horizontal"></div>
           <Checklist name="Notes" isTODO={false} setCurrID={setCurrID} setIsEditing={setIsEditing} hasEditing={true} data={repoData} /> */}
           <div className="divider lg:divider-horizontal"></div>
-          <Checklist name="Open Issues/PR" isTODO={false} hasEditing={false} data={issuesData.issues.concat(issuesData.PRs)} />
+          <ShowIssues name="Open Issues/PR" data={issuesData.issues.concat(issuesData.PRs)} />
         </div>)
       }
     </div>

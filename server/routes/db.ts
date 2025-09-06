@@ -1,5 +1,5 @@
 import express from "express";
-import { addTODOEntry, getTODOEntries, deleteTODOEntry, completeTODO, editTODOEntry } from '../databaseHelper';
+import { addTODOEntry, getTODOEntries, deleteTODOEntry, completeTODO, editTODOEntry, getDueSoonEntries } from '../databaseHelper';
 import type { TODOEntry, NoteEntry } from '../types';
 
 export var router = express.Router();
@@ -68,6 +68,18 @@ router.post('/TODO/complete', async (req, res) => {
         completeTODO(request.id, request.complete);
 
         res.json("Success!");
+    } catch (error) {
+        console.error(error);
+        res.status(500)
+        res.send('Failed to fetch user data');
+    }
+})
+
+router.get('/TODO/due_soon', async (req, res) => {
+    try {
+        const data = await getDueSoonEntries();
+        res.json(data);
+
     } catch (error) {
         console.error(error);
         res.status(500)

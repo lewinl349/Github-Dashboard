@@ -73,8 +73,7 @@ app.get('/api/issues/:owner/:name', async (req, res) => {
     const data = req.params;
 
     const issues = await parseIssues(data.owner, data.name);
-    
-    console.log("Grabbed issues!");
+  
     res.json(issues)
 
   } catch (error) {
@@ -106,9 +105,9 @@ app.get('/token/github', async (req, res) => {
   }
 })
 
-app.get('/token/openai', async (req, res) => {
+app.get('/token/ai', async (req, res) => {
   try {
-    if (process.env.OPENAI_TOKEN) {
+    if (process.env.GEMINI_TOKEN) {
       res.json(true);
     } else {
       res.json(false);
