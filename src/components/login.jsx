@@ -41,7 +41,7 @@ export function LoginPage() {
     }
 
     return (
-        <div className="flex flex-col lg:flex-row justify-center py-[30vh]">
+        <div className="flex flex-col lg:flex-row justify-center items-center py-[30vh]">
             <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-xs border p-4">
                 <legend className="fieldset-legend">Token Check</legend>
                 <label className="label text-sm flex justify-between">

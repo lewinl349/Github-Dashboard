@@ -26,29 +26,36 @@ function StatBox({ title, stat, children }) {
   )
 }
 
-function WelcomeBanner() {
-  const { isPending, error, data } = customUseQuery("N/A", "/api/user", "userdata");
+function WelcomeBanner({ TODOData }) {
+  const { isPending, error, data: userData } = customUseQuery("N/A", "/api/user", "userdata");
 
   if (isPending) return (<span className="loading loading-spinner text-primary"></span>);
   if (error) return 'An error has occurred: ' + error.message;
 
   return (
     <IconContext.Provider value={{ className: "h-8 w-8 mr-2" }}>
-      <div className="col-span-5 flex py-10 bg-base-100 border border-gray-400">
-        <img src={data.pfp}
-          className="mx-5 w-20 h-20"></img>
+      <div className="col-span-5 flex items-center gap-5 py-5 bg-base-100 border border-gray-400">
+        <img src={userData.pfp}
+          className="mx-5 w-20 h-20">
+        </img>
+        <h1 className="text-3xl font-bold align-middle">Welcome back, {userData.nickname || userData.name}!</h1>
+        <p className="align-middle">
+          Here's your summary for today:
+        </p>
         <div>
-          <h1 className="text-3xl font-bold">Welcome back, {data.nickname || data.name}!</h1>
-          <p className="pt-4">
-            Here's your summary for today:
-          </p>
+          <h1 className="text-m">Due This Week</h1>
+          <p className="text-4xl font-bold">{TODOData.length}</p>
+        </div>
+        <div>
+          <h1 className="text-m">Open Issues</h1>
+          <p className="text-4xl font-bold">12</p>
         </div>
       </div>
-      <StatBox title={"# of Repos"} stat={data.num_of_repos} children={<GoFileCode />} />
-      <StatBox title={"Commits (Past Year)"} stat={data.num_of_comm} children={<GoFlame />} />
-      <StatBox title={"Pull Req. (Past Year)"} stat={data.num_of_pull} children={<GoGitPullRequest />} />
-      <StatBox title={"Issues (Past Year)"} stat={data.num_of_issue} children={<CgFlagAlt />} />
-      <StatBox title={"Stars"} stat={data.num_of_stars} children={<GoStar />} />
+      <StatBox title={"# of Repos"} stat={userData.num_of_repos} children={<GoFileCode />} />
+      <StatBox title={"Commits (Past Year)"} stat={userData.num_of_comm} children={<GoFlame />} />
+      <StatBox title={"Pull Req. (Past Year)"} stat={userData.num_of_pull} children={<GoGitPullRequest />} />
+      <StatBox title={"Issues (Past Year)"} stat={userData.num_of_issue} children={<CgFlagAlt />} />
+      <StatBox title={"Stars"} stat={userData.num_of_stars} children={<GoStar />} />
     </IconContext.Provider>
 
   )
@@ -107,27 +114,22 @@ function GraphsCaro() {
   )
 }
 
-function DueSoonPanel() {
-  const { isPending, error, data } = customUseQuery("N/A", "/db/TODO/due_soon", "dueSoon");
-
-  if (isPending) return (<span className="loading loading-spinner text-primary"></span>);
-  if (error) return 'An error has occurred: ' + error.message;
-
+function DueSoonPanel({ data }) {
   return (
     <div className="col-span-2 row-span-3 list-row bg-base-100 p-5 rounded-box border border-gray-400">
       <div className="text-xl font-bold my-2">Upcoming</div>
       <ul className="list bg-base-100 rounded-box max-h-[40vh] max-w-[420px] overflow-scroll">
-        {data instanceof Array && data.length > 0 ? data.map((entry) => !entry.completed && (
+        {data instanceof Array && data.length > 0 ? data.map((entry) => (
           <li key={`${entry.id}`} className="list-row hover:bg-base-300 group flex justify-between">
             <div>
               <div className="font-bold">{entry.description}</div>
               <div>{`${entry.repo_owner}/${entry.repo_name}`}</div>
               <div className="text-gray-500">{`Due: ${entry.due_date.split('T')[0]}`}</div>
-              <div className="badge badge-outline badge-primary badge-xs">{entry.label}</div>  
+              <div className="badge badge-outline badge-primary badge-xs">{entry.label}</div>
             </div>
           </li>
         ))
-        : (<div className="list-row hover:bg-base-300 group">No items...</div>)}
+          : (<div className="list-row hover:bg-base-300 group">No items...</div>)}
       </ul>
     </div>
   )
@@ -136,9 +138,14 @@ function DueSoonPanel() {
 // ================= LAYOUT =================
 
 export default function Dashboard() {
+  const { isPending, error, data } = customUseQuery("N/A", "/db/TODO/due_soon", "dueSoon");
+
+  if (isPending) return (<span className="loading loading-spinner text-primary"></span>);
+  if (error) return 'An error has occurred: ' + error.message;
+
   return (
     <div className="grid grid-flow-col md:grid-flow-row gap-5 m-5">
-      <WelcomeBanner />
+      <WelcomeBanner TODOData={data} />
       <div className="row-start-3 col-span-3 row-span-3 flex flex-col bg-base-100 p-5 items-center border border-gray-400">
         <GraphsCaro />
         <div className="flex w-full justify-center gap-2 py-2">
@@ -149,7 +156,7 @@ export default function Dashboard() {
         </div>
         {/* <div className="btn btn-outline btn-primary">Customize</div> */}
       </div>
-      <DueSoonPanel />
+      <DueSoonPanel data={data} />
     </div>
   );
 }

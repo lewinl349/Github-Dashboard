@@ -134,7 +134,7 @@ export async function getDueSoonEntries(): Promise<any[]> {
     
     const todayStr: string = today.toISOString(); 
 
-    const sql: string = "SELECT * FROM todo WHERE datetime(due_date) < datetime(?) ORDER BY datetime(due_date) ASC";
+    const sql: string = "SELECT * FROM todo WHERE completed == 0 AND datetime(due_date) < datetime(?) ORDER BY datetime(due_date) ASC";
     const data: any[] = await fetchAll(db, sql, [todayStr]);
 
     return data;

@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 import cors from 'cors';
 import { router as db } from './routes/db';
 import { parseAllRepos, calculateAvgLang, parseUserData, parseIssues } from './jsonHelper';
-import { getToken } from './githubHelper';
+import { getToken as getGithubToken } from './githubHelper';
+import { getToken as getAIToken } from './geminiHelper';
 import type { Repo, User } from './types';
 
 // IMPORTANT NOTE: run ../start in the URL to load data from github
@@ -93,7 +94,7 @@ app.use('/db', db);
 app.get('/token/github', async (req, res) => {
   try {
     if (process.env.GITHUB_TOKEN) {
-      const valid = await getToken();
+      const valid = await getGithubToken();
       res.json(valid);
     } else {
       res.json(false);
@@ -108,7 +109,8 @@ app.get('/token/github', async (req, res) => {
 app.get('/token/ai', async (req, res) => {
   try {
     if (process.env.GEMINI_TOKEN) {
-      res.json(true);
+      const valid = await getAIToken();
+      res.json(valid);
     } else {
       res.json(false);
     }
