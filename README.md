@@ -4,6 +4,11 @@
 
 An unofficial webapp for Github with an AI assistant, dashboard summary, and localized notes/TODO lists for each repository.
 
+## Features 
+- **Visualizations**: Languages used, profile stats, etc... + Summary of upcoming tasks
+- **TODO Tracker**: For each repository + Issues/PR overview
+- **AI Assistant**: Give feedback/comments on code (WIP)
+
 ## Technology
 - React Router + Vite + Express
 - TailwindCSS (Plugin: DaisyUI)
@@ -12,12 +17,6 @@ An unofficial webapp for Github with an AI assistant, dashboard summary, and loc
 - Gemini + Github API
 - (Languages: Javascript, Typescript)
 - (Packages: See package.json)
-
-## Features 
-- Visualizations of languages used and other profile stats
-- Summary of upcoming tasks
-- For each repo: TODO list, notes, custom icon
-- AI Assistant to comment code and committing
 
 ## Prereq
 - Node.js
