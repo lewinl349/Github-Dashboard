@@ -2,7 +2,6 @@
 
 ## Description
 
-(Currently WIP)
 An unofficial webapp for Github with an AI assistant, dashboard summary, and localized notes/TODO lists for each repository.
 
 ## Technology
@@ -10,6 +9,7 @@ An unofficial webapp for Github with an AI assistant, dashboard summary, and loc
 - TailwindCSS (Plugin: DaisyUI)
 - SQLite3
 - GraphQL
+- Gemini + Github API
 - (Languages: Javascript, Typescript)
 - (Packages: See package.json)
 
@@ -17,7 +17,12 @@ An unofficial webapp for Github with an AI assistant, dashboard summary, and loc
 - Visualizations of languages used and other profile stats
 - Summary of upcoming tasks
 - For each repo: TODO list, notes, custom icon
-- AI Assistant to comment code, help with commiting, etc...
+- AI Assistant to comment code and committing
+
+## Prereq
+- Node.js
+- npm
+- Ports 3000 and 5173
 
 ## Instructions
 > [!IMPORTANT]
